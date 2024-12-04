@@ -126,7 +126,7 @@ module.exports = function(Client, LocalAuth, qrcode) {
                 
                     // Adiciona os horários ao string com a posição +1
                     horariosDisponiveisArray.forEach((horario, index) => {
-                        horariosDisponiveis += `${horario}\n`;
+                        horariosDisponiveis += `🕗 ${horario}\n`;
                     });
                 
                     message.reply(horariosDisponiveis + "\n\nDigite o seu horario exatamento igual!\n\nDigite 0 para voltar ao inicio!");
@@ -146,7 +146,7 @@ module.exports = function(Client, LocalAuth, qrcode) {
                 
                     // Adiciona os horários ao string com a posição +1
                     horariosDisponiveisArray.forEach((horario, index) => {
-                        horariosDisponiveis += `${horario}\n`;
+                        horariosDisponiveis += `🕗 ${horario}\n`;
                     });
                 
                     message.reply(horariosDisponiveis + "\n\nDigite o seu horario exatamento igual!\n\nDigite 0 para voltar ao inicio!");
@@ -166,7 +166,7 @@ module.exports = function(Client, LocalAuth, qrcode) {
                 
                     // Adiciona os horários ao string com a posição +1
                     horariosDisponiveisArray.forEach((horario, index) => {
-                        horariosDisponiveis += `${horario}\n`;
+                        horariosDisponiveis += `🕗 ${horario}\n`;
                     });
                 
                     message.reply(horariosDisponiveis + "\n\nDigite o seu horario exatamento igual!\n\nDigite 0 para voltar ao inicio!");
@@ -188,7 +188,7 @@ module.exports = function(Client, LocalAuth, qrcode) {
                 
                     // Adiciona os horários ao string com a posição +1
                     horariosDisponiveisArray.forEach((horario, index) => {
-                        horariosDisponiveis += `${horario}\n`;
+                        horariosDisponiveis += `🕗 ${horario}\n`;
                     });
                 
                     message.reply(horariosDisponiveis + "\n\nDigite o seu horario exatamento igual!\n\nDigite 0 para voltar ao inicio!");
@@ -208,7 +208,7 @@ module.exports = function(Client, LocalAuth, qrcode) {
                 
                     // Adiciona os horários ao string com a posição +1
                     horariosDisponiveisArray.forEach((horario, index) => {
-                        horariosDisponiveis += `${horario}\n`;
+                        horariosDisponiveis += `🕗 ${horario}\n`;
                     });
                 
                     message.reply(horariosDisponiveis + "\n\nDigite o seu horario exatamento igual!\n\nDigite 0 para voltar ao inicio!");
@@ -228,7 +228,7 @@ module.exports = function(Client, LocalAuth, qrcode) {
                 
                     // Adiciona os horários ao string com a posição +1
                     horariosDisponiveisArray.forEach((horario, index) => {
-                        horariosDisponiveis += `${horario}\n`;
+                        horariosDisponiveis += `🕗 ${horario}\n`;
                     });
                 
                     message.reply(horariosDisponiveis + "\n\nDigite o seu horario exatamento igual!\n\nDigite 0 para voltar ao inicio!");
