@@ -40,16 +40,12 @@ module.exports = function(Client, LocalAuth, qrcode) {
     
     // Responder mensagens
     client.on('message_create', async (message) => {
-        console.log(`Mensagem recebida de ${message.from}: ${message.body}`);
-        console.log(`Estado atual: ${state}`);
-        console.log(`Usuário atual: ${usuarioAtual}`);
 
         // Verifica se o usuário está iniciando a conversa com "oi"
         if (message.body.toLowerCase() === 'oi' || message.body == "0") {
             usuarioAtual = message.from;
             todas_informacoes = []
             state = ""
-            console.log(`Usuário atual definido como: ${usuarioAtual}`);
             message.reply(`👋 Olá! Seja Bem Vindo!\nVamos agendar seu corte? ✂️💇‍♂️\n\n🗓️ Escolha uma das opções abaixo para começar:\n\n📅 Agendar um corte - 1\n🔄 Cancelar ou alterar um agendamento - 2\n💬 Falar com um atendente - 3`);
             return;
         }
@@ -78,14 +74,12 @@ module.exports = function(Client, LocalAuth, qrcode) {
         }
 
         if(state == "barber" && message.body.toLowerCase() == "b") {
-            console.log("Opção 1 selecionada: Agendar corte");
             message.reply('📅 Digite a data do corte!\n\nNo formato: DD/MM/AAAA\nExemplo: 23/12/2024\n\nDigite 0 para voltar ao inicio!');
             state = "data";
             todas_informacoes.push("Bruno");
             return;
         }
         if(state == "barber" && message.body.toLowerCase() == "w") {
-            console.log("Opção 1 selecionada: Agendar corte");
             message.reply('📅 Digite a data do corte!\n\nNo formato: DD/MM/AAAA\nExemplo: 23/12/2024\n\nDigite 0 para voltar ao inicio!');
             state = "data";
             todas_informacoes.push("Wallyson");
@@ -94,7 +88,6 @@ module.exports = function(Client, LocalAuth, qrcode) {
 
         // Verifica se a data é válida e se o estado é "data"
         if (datePattern.test(message.body) && state == "data") {
-            console.log("Data recebida e válida");
             
             // Converte a data do usuário para um objeto Date
             const dataRecebida = new Date(converterData(message.body));
@@ -102,7 +95,6 @@ module.exports = function(Client, LocalAuth, qrcode) {
         
             // Verifica se a data recebida é anterior à data atual
             if (dataRecebida < dataAtual) {
-                console.log("A data recebida é anterior à data atual.");
                 message.reply('🚫 A data escolhida não pode ser uma data passada. Por favor, escolha uma data futura.');
                 return; // Interrompe a execução se a data for inválida
             }
@@ -260,7 +252,6 @@ module.exports = function(Client, LocalAuth, qrcode) {
 
         // Verifica se o usuário está escolhendo um horário disponível
         if (state == "horas" && horariosDisponiveisArray.includes(message.body)) {
-            console.log("Horário escolhido: " + message.body);
             todas_informacoes.push(message.body);
             message.reply('👏 Bela escolha!\n\nAgora para confirmar seu agendamento: \n\n📅 '+todas_informacoes[1]+'\n🕑 '+todas_informacoes[2]+'\n\nDigite seu nome completo!\n\nDigite 0 para voltar ao inicio!');
             state = "name";
@@ -269,7 +260,6 @@ module.exports = function(Client, LocalAuth, qrcode) {
 
         // Verifica se o estado é "name" e se a mensagem é do usuário atual
         if (state === "name" && usuarioAtual === message.from) {
-            console.log(`Esperando nome do usuário: ${message.from}`);
             if (message.body && message.body.trim() !== "") {
                 console.log(`Nome recebido: ${message.body}`);
                 todas_informacoes.push(message.body); // Adiciona o nome do usuário
@@ -278,7 +268,6 @@ module.exports = function(Client, LocalAuth, qrcode) {
                 state = ""; // Reseta o estado após confirmação
                 todas_informacoes = []
             } else {
-                console.log("O nome não foi digitado ou está vazio.");
                 message.reply('🚫 Por favor, digite seu nome completo para confirmar o agendamento.');
             }
             return;
