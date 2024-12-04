@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/styles/home.css">
+    <title>Bruno Barber - Agendamentos</title>
+</head>
+<body>
+    <header>
+        <div class="logo">
+          <img src="/img/logo.png" />
+        </div>
+        <!--menu-->
+        <nav>
+          <div class="mobile-menu">
+            <div class="line1"></div>
+            <div class="line2"></div>
+            <div class="line3"></div>
+          </div>
+          <ul class="nav-list">
+            <li>
+              <a href="/" style="font-weight: bold; color: white">Início</a>
+            </li>
+            <li><a href="/gerenciar">Gerenciar</a></li>
+          </ul>
+        </nav>
+  
+        <!--menu-->
+      </header>
+    
+      <section class="select">
+        <h2>Horarios de </h2>
+        <select name="barbeiro" id="barbeiro">
+            <option value="Wallyson">Wallyson</option>
+            <option value="Bruno">Bruno</option>
+          </select>
+      </section>
+
+      <a href="/home/wallyson" id="w" style="display: none;"></a>
+      <a href="/home" id="b" style="display: none;"></a>
+
+      <form action="/home/wallyson" method="post" class="date-form">
+        <input type="date" name="date" required>
+        <input type="submit" value="Ver Horarios">
+      </form>
+      
+      <div class="select">
+        <h2>Horarios Do Dia</h2>
+      </div>
+      <section class="agendamentos">
+        <% for (let i = 0;i < agendamentos.length;i++) { %>
+            <div class="agendamento-single">
+                <h2><%= agendamentos[i].time %></h2>
+                <p><%= agendamentos[i].name %></p>
+                <form action="/delete/id" method="post">
+                    <input type="text" name="" id="" style="display: none;" value="">
+                    <input type="submit" value="Concluir">
+                </form>
+            </div>
+        <% } %>
+      </section>
+    
+    <script src="/js/mobile-menu.js"></script>
+    <script>
+        const barbeiro = document.getElementById("barbeiro");
+        const bruno = document.getElementById("b");
+        const wallyson = document.getElementById("w");
+
+        barbeiro.addEventListener('change', () => {
+            const barbeiroValue = barbeiro.value;
+            if(barbeiroValue == "Wallyson") {
+                wallyson.click();
+            } else if(barbeiroValue == "Bruno") {
+                bruno.click();
+            }
+        });
+    </script>
+</body>
+</html>

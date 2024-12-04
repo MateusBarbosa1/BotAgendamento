@@ -1,0 +1,6 @@
+2024/12/03-20:07:30.499 1a123 Reusing MANIFEST /workspaces/BotAgendamento/.wwebjs_auth/session/Default/Local Storage/leveldb/MANIFEST-000001
+2024/12/03-20:07:30.503 1a123 Recovering log #36
+2024/12/03-20:07:30.503 1a123 Reusing old log /workspaces/BotAgendamento/.wwebjs_auth/session/Default/Local Storage/leveldb/000036.log 
+2024/12/03-21:27:41.408 21844 Level-0 table #40: started
+2024/12/03-21:27:41.411 21844 Level-0 table #40: 13560 bytes OK
+2024/12/03-21:27:41.412 21844 Delete type=0 #36
