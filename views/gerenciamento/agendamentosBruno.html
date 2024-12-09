@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/styles/home.css">
+    <link rel="stylesheet" href="/styles/gerenciamento.css">
+    <title>Bruno Barber - Agendamentos</title>
+</head>
+<body>
+    <header>
+        <div class="logo">
+          <img src="/img/logo.png" />
+        </div>
+        <!--menu-->
+        <nav>
+          <div class="mobile-menu">
+            <div class="line1"></div>
+            <div class="line2"></div>
+            <div class="line3"></div>
+          </div>
+          <ul class="nav-list">
+            <li>
+              <a href="/">Início</a>
+            </li>
+            <li><a href="/gerenciar" style="font-weight: bold; color: white">Gerenciar</a></li>
+          </ul>
+        </nav>
+  
+        <!--menu-->
+      </header>
+
+      <div class="option">
+        <a href="/gerenciar">VOLTAR</a>
+      </div>
+
+
+      
+      
+      <div class="select">
+        <h2>Seus Agendamentos</h2>
+      </div>
+      <form action="" method="post" class="date-form">
+        <input type="date" name="date" id="" required>
+        <input type="submit" value="Ver Agendamentos">
+      </form>
+      <section class="agendamentos">
+        <form action="/gerenciar/bruno/agendamento/delete" method="post"  id="agendamentos-container">
+        <script>
+            const agendamentos = <%- JSON.stringify(agendamentos) %>;
+
+        // Ordenar pelo horário
+        agendamentos.sort((a, b) => {
+            // Garantir que o horário esteja no formato correto
+            const [hoursA, minutesA] = a.time.split(':').map(Number);
+            const [hoursB, minutesB] = b.time.split(':').map(Number);
+
+            const timeA = new Date(1970, 0, 1, hoursA, minutesA); // Data fixa com horas/minutos
+            const timeB = new Date(1970, 0, 1, hoursB, minutesB);
+
+            return timeA - timeB; // Ordenação crescente
+        });
+
+        // Renderizar os agendamentos no DOM
+        const container = document.getElementById('agendamentos-container');
+        agendamentos.forEach(agendamento => {
+            if (agendamento.name !== 'Indisponivel') {
+                const div = document.createElement('div');
+                div.className = 'agendamento-single';
+                div.innerHTML = `
+                    <h2>${agendamento.time}</h2>
+                    <p>${agendamento.name}</p>
+                    <p style="font-weight: bold;">${agendamento.servico}</p>
+                    <input type="checkbox" value="${agendamento.id}" name="selectedAgendamentos">
+                `;
+                container.appendChild(div);
+            }
+        });
+
+        </script>
+        <input type="submit" value="Cancelar Agendamentos">
+        </form>
+    </section>
+
+    <script src="/js/mobile-menu.js"></script>
+</body>
+</html>

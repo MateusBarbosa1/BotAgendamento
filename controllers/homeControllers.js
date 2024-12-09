@@ -5,7 +5,6 @@ module.exports.renderHome = async function(app,req,res) {
     if(token === undefined) {
         res.redirect('/');
     } else {
-        console.log(jwtDecode(token));
         if(jwtDecode(token).user == "BrunoAdmin") {
             const agendamentosModel = require('../models/agendamentosModel');
             const agendamentos = await agendamentosModel.getAgendamentos(new Date(), "Bruno");
@@ -22,7 +21,6 @@ module.exports.renderHome2 = async function(app,req,res) {
     if(token === undefined) {
         res.redirect('/');
     } else {
-        console.log(jwtDecode(token));
         if(jwtDecode(token).user == "BrunoAdmin") {
             const agendamentosModel = require('../models/agendamentosModel');
             const agendamentos = await agendamentosModel.getAgendamentos(new Date(), "Wallyson");
@@ -43,4 +41,11 @@ module.exports.searchDate2 = async function(app,req,res) {
     
     const agendamentos = await agendamentosModel.getAgendamentos(req.body.date, "Wallyson");
     res.render("home/wallyson", {agendamentos: agendamentos})
+}
+module.exports.deleteAgendamentoID = async function(app,req,res) {
+    const data = req.body;
+    
+    const agendamentosModel = require('../models/agendamentosModel');
+    await agendamentosModel.deleteAgendamentoID(data.id);
+    res.redirect(data.link);
 }

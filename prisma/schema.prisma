@@ -8,11 +8,20 @@ datasource db {
 }
 
 model Agendamentos {
-  id    Int      @id @default(autoincrement()) // ID único com autoincremento
+  id        String   @id @default(uuid()) // UUID gerado automaticamente
+  servico String
   barbeiro String
   date  DateTime // Coluna para guardar datas e horas
   time  String   // Coluna para guardar apenas o horário no formato HH:mm
   name  String
   numero String
   horarioAgendamento DateTime
+}
+model HorariosBruno {
+  diaSemana String @unique
+  horarios String[]
+}
+model HorariosWallyson {
+  diaSemana String @unique
+  horarios String[]
 }

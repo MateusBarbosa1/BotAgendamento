@@ -2,16 +2,15 @@ module.exports = function(Client, LocalAuth, qrcode) {
     var state = "";
     const datePattern = /^(0[1-9]|[12][0-9]|3[01])\/(0[1-9]|1[0-2])\/\d{4}$/;
 
-    const horas1 = ["09:00", "09:40", "10:20", "11:00", "11:40", "13:20", "14:00", "14:40", "15:20", "16:00", "16:40", "17:20", "18:00", "18:40"]; // segunda os dois / bruno todos dias da semana
-    const horas2 = ["08:00", "08:40", "09:20", "10:00", "10:40", "11:20", "13:20", "14:00", "14:40", "15:20", "16:00", "16:40", "17:20", "18:00", "18:40"] // wallyson terça a quinta
-    const horas3 = ["08:00", "08:40", "09:20", "10:00", "10:40", "11:20", "13:20", "14:00", "14:40", "15:20", "16:00", "16:40", "17:20", "18:00", "18:40","19:20"] // sexta os dois
-    const horas4 = ["08:00", "08:40", "09:20", "10:00", "10:40", "11:20", "13:20", "14:00", "14:40", "15:20", "16:00", "16:40", "17:20"]; // sabado os dois
-
     var horariosDisponiveisArray = [];
+
     const agendamentosModel = require('../models/agendamentosModel');
+    
 
     var todas_informacoes = [];
     let usuarioAtual = "";
+
+    state2 = ""
 
     const client = new Client({
         authStrategy: new LocalAuth(), // Salva sessão localmente
@@ -25,6 +24,10 @@ module.exports = function(Client, LocalAuth, qrcode) {
             return `${partes[2]}-${partes[1]}-${partes[0]}`;
         }
         return null; // Retorna null se a data não estiver no formato correto
+    }
+    function isUUID(message) {
+        const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+        return uuidRegex.test(message);
     }
     
     // Gerar QR Code para login
@@ -46,12 +49,12 @@ module.exports = function(Client, LocalAuth, qrcode) {
             usuarioAtual = message.from;
             todas_informacoes = []
             state = ""
-            message.reply(`👋 Olá! Seja Bem Vindo!\nVamos agendar seu corte? ✂️💇‍♂️\n\n🗓️ Escolha uma das opções abaixo para começar:\n\n📅 Agendar um corte - 1\n🔄 Cancelar ou alterar um agendamento - 2\n💬 Falar com um atendente - 3`);
+            message.reply(`👋 Olá! Seja Bem Vindo!\nVamos agendar seu corte? ✂️💇‍♂️\n\n🗓️ Escolha uma das opções abaixo para começar:\n\n📅 Agendar um corte - 1\n🔄 Cancelar um agendamento - 2\n💬 Falar com um atendente - 3`);
             return;
         }
 
         // Verifica se o usuário está escolhendo a opção de agendar um corte
-        if (message.body === '1') {
+        if (message.body === '1' && state == "") {
             const agendamentosModel = require("../models/agendamentosModel");
             const agendamentos = await agendamentosModel.getAgendamentosNumber(message.from);
 
@@ -69,8 +72,42 @@ module.exports = function(Client, LocalAuth, qrcode) {
 
             }
 
-            message.reply("Ola, selecione um dos nossos barbeiro!\n\nB - Bruno\nW - Wallyson\n\nDigite 0 para voltar ao inicio!")
+            message.reply("Ola, selecione qual serviço você deseja!\n\n1 - Cabelo\n2 - Barba\n3 - Cabelo/Barba\n\nDigite 0 para voltar ao inicio!")
+            state = "servico"
+            return
+        }
+        if(message.body === '2' && state == "") {
+            message.reply("Ola, para cancelar o seu corte siga esses passos!\n\nEnvie seu ID do agendamento\n\nobs: ele está no final da mensagem de confirmação do agendamento!\n\nDigite 0 para voltar ao inicio!")
+            state2 = "cancelar"
+            return
+        }
+        if(message.body === '3' && state == "") {
+            message.reply("Ola, tudo bem? sua mensagem foi direcionada para o atendente!\n\n🕗 Pode levar um tempo para ele responder!\n\nDigite 0 para voltar ao inicio!")
+            state2 = "cancelar"
+            return
+        }
+        if(state2 == "cancelar" && isUUID(message.body) == true) {
+            const agendamentosModel = require("../models/agendamentosModel");
+            await agendamentosModel.deleteAgendamentoID(message.body);
+            message.reply("✅ Agendamento Cancelado com sucesso!\n\nDigite 0 para voltar ao inicio!");
+        }
+        if(state == "servico" && message.body === '1') {
+            todas_informacoes.push("Cabelo");
+            message.reply("Agora selecione um dos nossos barbeiro!\n\nB - Bruno\nW - Wallyson\n\nDigite 0 para voltar ao inicio!")
             state = "barber"
+            return
+        }
+        if(state == "servico" && message.body === '2') {
+            todas_informacoes.push("Barba");
+            message.reply("Agora selecione um dos nossos barbeiro!\n\nB - Bruno\nW - Wallyson\n\nDigite 0 para voltar ao inicio!")
+            state = "barber"
+            return
+        }
+        if(state == "servico" && message.body === '3') {
+            todas_informacoes.push("Cabelo/Barba");
+            message.reply("Agora selecione um dos nossos barbeiro!\n\nB - Bruno\nW - Wallyson\n\nDigite 0 para voltar ao inicio!")
+            state = "barber"
+            return
         }
 
         if(state == "barber" && message.body.toLowerCase() == "b") {
@@ -103,18 +140,86 @@ module.exports = function(Client, LocalAuth, qrcode) {
                 message.reply("😭 Desculpe, não trabalhamos no Domingo!\n\nDigite 0 para voltar ao inicio!")
             }
 
-            if(todas_informacoes[0] == "Bruno") {
-                if(dataRecebida.getDay() == 1 || dataRecebida.getDay() == 2 || dataRecebida.getDay() == 3 || dataRecebida.getDay() == 4) { // Bruno segunda a quinta
+            if(todas_informacoes[1] == "Bruno") {
+                if(dataRecebida.getDay() == 1) { // Bruno segunda a quinta
                     todas_informacoes.push(message.body);
+                    const horariosModel = require('../models/horariosModel');
+                    const horarios = await horariosModel.getHorariosBruno("Segunda");
                     let horariosDisponiveis = '👏 Muito Bem!\n\n Horários disponíveis: \n';
                     let horariosIndisponiveis = [];
-                    const agendamentos = await agendamentosModel.getAgendamentos(converterData(message.body), todas_informacoes[0]);
+                    const agendamentos = await agendamentosModel.getAgendamentos(converterData(message.body), todas_informacoes[1]);
                     for (let i = 0; i < agendamentos.length; i++) {
                         horariosIndisponiveis.push(agendamentos[i].time);
                     }
                 
                     // Filtra os horários disponíveis removendo os indisponíveis
-                    horariosDisponiveisArray = horas1.filter(horario => !horariosIndisponiveis.includes(horario));
+                    horariosDisponiveisArray = horarios[0].horarios.filter(horario => !horariosIndisponiveis.includes(horario));
+                
+                    // Adiciona os horários ao string com a posição +1
+                    horariosDisponiveisArray.forEach((horario, index) => {
+                        horariosDisponiveis += `🕗 ${horario}\n`;
+                    });
+                
+                    message.reply(horariosDisponiveis + "\n\nDigite o seu horario exatamento igual!\n\nDigite 0 para voltar ao inicio!");
+                    state = "horas";
+                    return;
+                } else if(dataRecebida.getDay() == 2) { // Bruno segunda a quinta
+                    todas_informacoes.push(message.body);
+                    const horariosModel = require('../models/horariosModel');
+                    const horarios = await horariosModel.getHorariosBruno("Terca");
+                    let horariosDisponiveis = '👏 Muito Bem!\n\n Horários disponíveis: \n';
+                    let horariosIndisponiveis = [];
+                    const agendamentos = await agendamentosModel.getAgendamentos(converterData(message.body), todas_informacoes[1]);
+                    for (let i = 0; i < agendamentos.length; i++) {
+                        horariosIndisponiveis.push(agendamentos[i].time);
+                    }
+                
+                    // Filtra os horários disponíveis removendo os indisponíveis
+                    horariosDisponiveisArray = horarios[0].horarios.filter(horario => !horariosIndisponiveis.includes(horario));
+                
+                    // Adiciona os horários ao string com a posição +1
+                    horariosDisponiveisArray.forEach((horario, index) => {
+                        horariosDisponiveis += `🕗 ${horario}\n`;
+                    });
+                
+                    message.reply(horariosDisponiveis + "\n\nDigite o seu horario exatamento igual!\n\nDigite 0 para voltar ao inicio!");
+                    state = "horas";
+                    return;
+                } else if(dataRecebida.getDay() == 3) { // Bruno segunda a quinta
+                    todas_informacoes.push(message.body);
+                    const horariosModel = require('../models/horariosModel');
+                    const horarios = await horariosModel.getHorariosBruno("Quarta");
+                    let horariosDisponiveis = '👏 Muito Bem!\n\n Horários disponíveis: \n';
+                    let horariosIndisponiveis = [];
+                    const agendamentos = await agendamentosModel.getAgendamentos(converterData(message.body), todas_informacoes[1]);
+                    for (let i = 0; i < agendamentos.length; i++) {
+                        horariosIndisponiveis.push(agendamentos[i].time);
+                    }
+                
+                    // Filtra os horários disponíveis removendo os indisponíveis
+                    horariosDisponiveisArray = horarios[0].horarios.filter(horario => !horariosIndisponiveis.includes(horario));
+                
+                    // Adiciona os horários ao string com a posição +1
+                    horariosDisponiveisArray.forEach((horario, index) => {
+                        horariosDisponiveis += `🕗 ${horario}\n`;
+                    });
+                
+                    message.reply(horariosDisponiveis + "\n\nDigite o seu horario exatamento igual!\n\nDigite 0 para voltar ao inicio!");
+                    state = "horas";
+                    return;
+                } else if(dataRecebida.getDay() == 4) { // Bruno segunda a quinta
+                    todas_informacoes.push(message.body);
+                    const horariosModel = require('../models/horariosModel');
+                    const horarios = await horariosModel.getHorariosBruno("Quinta");
+                    let horariosDisponiveis = '👏 Muito Bem!\n\n Horários disponíveis: \n';
+                    let horariosIndisponiveis = [];
+                    const agendamentos = await agendamentosModel.getAgendamentos(converterData(message.body), todas_informacoes[1]);
+                    for (let i = 0; i < agendamentos.length; i++) {
+                        horariosIndisponiveis.push(agendamentos[i].time);
+                    }
+                
+                    // Filtra os horários disponíveis removendo os indisponíveis
+                    horariosDisponiveisArray = horarios[0].horarios.filter(horario => !horariosIndisponiveis.includes(horario));
                 
                     // Adiciona os horários ao string com a posição +1
                     horariosDisponiveisArray.forEach((horario, index) => {
@@ -126,15 +231,17 @@ module.exports = function(Client, LocalAuth, qrcode) {
                     return;
                 } else if(dataRecebida.getDay() == 5) { // Bruno sexta
                     todas_informacoes.push(message.body);
+                    const horariosModel = require('../models/horariosModel');
+                    const horarios = await horariosModel.getHorariosBruno("Sexta");
                     let horariosDisponiveis = '👏 Muito Bem!\n\n Horários disponíveis: \n';
                     let horariosIndisponiveis = [];
-                    const agendamentos = await agendamentosModel.getAgendamentos(converterData(message.body), todas_informacoes[0]);
+                    const agendamentos = await agendamentosModel.getAgendamentos(converterData(message.body), todas_informacoes[1]);
                     for (let i = 0; i < agendamentos.length; i++) {
                         horariosIndisponiveis.push(agendamentos[i].time);
                     }
                 
                     // Filtra os horários disponíveis removendo os indisponíveis
-                    horariosDisponiveisArray = horas3.filter(horario => !horariosIndisponiveis.includes(horario));
+                    horariosDisponiveisArray = horarios[0].horarios.filter(horario => !horariosIndisponiveis.includes(horario));
                 
                     // Adiciona os horários ao string com a posição +1
                     horariosDisponiveisArray.forEach((horario, index) => {
@@ -146,15 +253,17 @@ module.exports = function(Client, LocalAuth, qrcode) {
                     return;
                 } else if(dataRecebida.getDay() == 6) { // Bruno sabado
                     todas_informacoes.push(message.body);
+                    const horariosModel = require('../models/horariosModel');
+                    const horarios = await horariosModel.getHorariosBruno("Sabado");
                     let horariosDisponiveis = '👏 Muito Bem!\n\n Horários disponíveis: \n';
                     let horariosIndisponiveis = [];
-                    const agendamentos = await agendamentosModel.getAgendamentos(converterData(message.body), todas_informacoes[0]);
+                    const agendamentos = await agendamentosModel.getAgendamentos(converterData(message.body), todas_informacoes[1]);
                     for (let i = 0; i < agendamentos.length; i++) {
                         horariosIndisponiveis.push(agendamentos[i].time);
                     }
                 
                     // Filtra os horários disponíveis removendo os indisponíveis
-                    horariosDisponiveisArray = horas4.filter(horario => !horariosIndisponiveis.includes(horario));
+                    horariosDisponiveisArray = horarios[0].horarios.filter(horario => !horariosIndisponiveis.includes(horario));
                 
                     // Adiciona os horários ao string com a posição +1
                     horariosDisponiveisArray.forEach((horario, index) => {
@@ -165,18 +274,20 @@ module.exports = function(Client, LocalAuth, qrcode) {
                     state = "horas";
                     return;
                 }
-            } else if(todas_informacoes[0] == "Wallyson") {
+            } else if(todas_informacoes[1] == "Wallyson") {
                 if(dataRecebida.getDay() == 1) { // Wallyson segunda
                     todas_informacoes.push(message.body);
+                    const horariosModel = require('../models/horariosModel');
+                    const horarios = await horariosModel.getHorariosWallyson("Segunda");
                     let horariosDisponiveis = '👏 Muito Bem!\n\n Horários disponíveis: \n';
                     let horariosIndisponiveis = [];
-                    const agendamentos = await agendamentosModel.getAgendamentos(converterData(message.body), todas_informacoes[0]);
+                    const agendamentos = await agendamentosModel.getAgendamentos(converterData(message.body), todas_informacoes[1]);
                     for (let i = 0; i < agendamentos.length; i++) {
                         horariosIndisponiveis.push(agendamentos[i].time);
                     }
                 
                     // Filtra os horários disponíveis removendo os indisponíveis
-                    horariosDisponiveisArray = horas1.filter(horario => !horariosIndisponiveis.includes(horario));
+                    horariosDisponiveisArray = horarios[0].horarios.filter(horario => !horariosIndisponiveis.includes(horario));
                 
                     // Adiciona os horários ao string com a posição +1
                     horariosDisponiveisArray.forEach((horario, index) => {
@@ -186,17 +297,63 @@ module.exports = function(Client, LocalAuth, qrcode) {
                     message.reply(horariosDisponiveis + "\n\nDigite o seu horario exatamento igual!\n\nDigite 0 para voltar ao inicio!");
                     state = "horas";
                     return;
-                } else if(dataRecebida.getDay() == 2 || dataRecebida.getDay() == 3 || dataRecebida.getDay() == 4) { // Wallyson terça a quinta
+                } else if(dataRecebida.getDay() == 2) { // Wallyson terça a quinta
                     todas_informacoes.push(message.body);
+                    const horariosModel = require('../models/horariosModel');
+                    const horarios = await horariosModel.getHorariosWallyson("Terca");
                     let horariosDisponiveis = '👏 Muito Bem!\n\n Horários disponíveis: \n';
                     let horariosIndisponiveis = [];
-                    const agendamentos = await agendamentosModel.getAgendamentos(converterData(message.body), todas_informacoes[0]);
+                    const agendamentos = await agendamentosModel.getAgendamentos(converterData(message.body), todas_informacoes[1]);
                     for (let i = 0; i < agendamentos.length; i++) {
                         horariosIndisponiveis.push(agendamentos[i].time);
                     }
                 
                     // Filtra os horários disponíveis removendo os indisponíveis
-                    horariosDisponiveisArray = horas2.filter(horario => !horariosIndisponiveis.includes(horario));
+                    horariosDisponiveisArray = horarios[0].horarios.filter(horario => !horariosIndisponiveis.includes(horario));
+                
+                    // Adiciona os horários ao string com a posição +1
+                    horariosDisponiveisArray.forEach((horario, index) => {
+                        horariosDisponiveis += `🕗 ${horario}\n`;
+                    });
+                
+                    message.reply(horariosDisponiveis + "\n\nDigite o seu horario exatamento igual!\n\nDigite 0 para voltar ao inicio!");
+                    state = "horas";
+                    return;
+                } else if(dataRecebida.getDay() == 3) { // Wallyson terça a quinta
+                    todas_informacoes.push(message.body);
+                    const horariosModel = require('../models/horariosModel');
+                    const horarios = await horariosModel.getHorariosWallyson("Quarta");
+                    let horariosDisponiveis = '👏 Muito Bem!\n\n Horários disponíveis: \n';
+                    let horariosIndisponiveis = [];
+                    const agendamentos = await agendamentosModel.getAgendamentos(converterData(message.body), todas_informacoes[1]);
+                    for (let i = 0; i < agendamentos.length; i++) {
+                        horariosIndisponiveis.push(agendamentos[i].time);
+                    }
+                
+                    // Filtra os horários disponíveis removendo os indisponíveis
+                    horariosDisponiveisArray = horarios[0].horarios.filter(horario => !horariosIndisponiveis.includes(horario));
+                
+                    // Adiciona os horários ao string com a posição +1
+                    horariosDisponiveisArray.forEach((horario, index) => {
+                        horariosDisponiveis += `🕗 ${horario}\n`;
+                    });
+                
+                    message.reply(horariosDisponiveis + "\n\nDigite o seu horario exatamento igual!\n\nDigite 0 para voltar ao inicio!");
+                    state = "horas";
+                    return;
+                } else if(dataRecebida.getDay() == 4) { // Wallyson terça a quinta
+                    todas_informacoes.push(message.body);
+                    const horariosModel = require('../models/horariosModel');
+                    const horarios = await horariosModel.getHorariosWallyson("Quinta");
+                    let horariosDisponiveis = '👏 Muito Bem!\n\n Horários disponíveis: \n';
+                    let horariosIndisponiveis = [];
+                    const agendamentos = await agendamentosModel.getAgendamentos(converterData(message.body), todas_informacoes[1]);
+                    for (let i = 0; i < agendamentos.length; i++) {
+                        horariosIndisponiveis.push(agendamentos[i].time);
+                    }
+                
+                    // Filtra os horários disponíveis removendo os indisponíveis
+                    horariosDisponiveisArray = horarios[0].horarios.filter(horario => !horariosIndisponiveis.includes(horario));
                 
                     // Adiciona os horários ao string com a posição +1
                     horariosDisponiveisArray.forEach((horario, index) => {
@@ -208,15 +365,17 @@ module.exports = function(Client, LocalAuth, qrcode) {
                     return;
                 } else if(dataRecebida.getDay() == 5) { // Wallyson sexta
                     todas_informacoes.push(message.body);
+                    const horariosModel = require('../models/horariosModel');
+                    const horarios = await horariosModel.getHorariosWallyson("Sexta");
                     let horariosDisponiveis = '👏 Muito Bem!\n\n Horários disponíveis: \n';
                     let horariosIndisponiveis = [];
-                    const agendamentos = await agendamentosModel.getAgendamentos(converterData(message.body), todas_informacoes[0]);
+                    const agendamentos = await agendamentosModel.getAgendamentos(converterData(message.body), todas_informacoes[1]);
                     for (let i = 0; i < agendamentos.length; i++) {
                         horariosIndisponiveis.push(agendamentos[i].time);
                     }
                 
                     // Filtra os horários disponíveis removendo os indisponíveis
-                    horariosDisponiveisArray = horas3.filter(horario => !horariosIndisponiveis.includes(horario));
+                    horariosDisponiveisArray = horarios[0].horarios.filter(horario => !horariosIndisponiveis.includes(horario));
                 
                     // Adiciona os horários ao string com a posição +1
                     horariosDisponiveisArray.forEach((horario, index) => {
@@ -228,22 +387,24 @@ module.exports = function(Client, LocalAuth, qrcode) {
                     return;
                 } else if(dataRecebida.getDay() == 6) { // Wallyson sabado
                     todas_informacoes.push(message.body);
+                    const horariosModel = require('../models/horariosModel');
+                    const horarios = await horariosModel.getHorariosWallyson("Sabado");
                     let horariosDisponiveis = '👏 Muito Bem!\n\n Horários disponíveis: \n';
                     let horariosIndisponiveis = [];
-                    const agendamentos = await agendamentosModel.getAgendamentos(converterData(message.body), todas_informacoes[0]);
+                    const agendamentos = await agendamentosModel.getAgendamentos(converterData(message.body), todas_informacoes[1]);
                     for (let i = 0; i < agendamentos.length; i++) {
                         horariosIndisponiveis.push(agendamentos[i].time);
                     }
                 
                     // Filtra os horários disponíveis removendo os indisponíveis
-                    horariosDisponiveisArray = horas4.filter(horario => !horariosIndisponiveis.includes(horario));
+                    horariosDisponiveisArray = horarios[0].horarios.filter(horario => !horariosIndisponiveis.includes(horario));
                 
                     // Adiciona os horários ao string com a posição +1
                     horariosDisponiveisArray.forEach((horario, index) => {
-                        horariosDisponiveis += `🕑 ${horario}\n`;
+                        horariosDisponiveis += `🕗 ${horario}\n`;
                     });
                 
-                    message.reply(horariosDisponiveis + "\n\nDigite o seu horario exatamente igual!\n\nDigite 0 para voltar ao inicio!");
+                    message.reply(horariosDisponiveis + "\n\nDigite o seu horario exatamento igual!\n\nDigite 0 para voltar ao inicio!");
                     state = "horas";
                     return;
                 }
@@ -253,7 +414,7 @@ module.exports = function(Client, LocalAuth, qrcode) {
         // Verifica se o usuário está escolhendo um horário disponível
         if (state == "horas" && horariosDisponiveisArray.includes(message.body)) {
             todas_informacoes.push(message.body);
-            message.reply('👏 Bela escolha!\n\nAgora para confirmar seu agendamento: \n\n📅 '+todas_informacoes[1]+'\n🕑 '+todas_informacoes[2]+'\n\nDigite seu nome completo!\n\nDigite 0 para voltar ao inicio!');
+            message.reply('👏 Bela escolha!\n\nAgora para confirmar seu agendamento: \n\n📅 '+todas_informacoes[2]+'\n🕑 '+todas_informacoes[3]+'\n\nDigite seu nome completo!\n\nDigite 0 para voltar ao inicio!');
             state = "name";
             return;
         }
@@ -261,10 +422,9 @@ module.exports = function(Client, LocalAuth, qrcode) {
         // Verifica se o estado é "name" e se a mensagem é do usuário atual
         if (state === "name" && usuarioAtual === message.from) {
             if (message.body && message.body.trim() !== "") {
-                console.log(`Nome recebido: ${message.body}`);
                 todas_informacoes.push(message.body); // Adiciona o nome do usuário
-                await agendamentosModel.setAgendamentos(todas_informacoes[0], new Date(converterData(todas_informacoes[1])),todas_informacoes[2],todas_informacoes[3],message.from,new Date());
-                message.reply(`🎉 Parabéns! Seu corte foi agendado!\n\nSegue aqui suas informações:\n\n👨 ${todas_informacoes[3]}\n📅 ${todas_informacoes[1]}\n🕑 ${todas_informacoes[2]}\n\nDigite 0 para voltar ao inicio!`);
+                const agendamento = await agendamentosModel.setAgendamentos(todas_informacoes[0],todas_informacoes[1], new Date(converterData(todas_informacoes[2])),todas_informacoes[3],todas_informacoes[4],message.from,new Date());
+                message.reply(`🎉 Parabéns! Seu corte foi agendado!\n\nSegue aqui suas informações:\n\n👨 ${todas_informacoes[4]}\n📅 ${todas_informacoes[2]}\n🕑 ${todas_informacoes[3]}\n\nID do agendamento: ${agendamento.id}\n\nDigite 0 para voltar ao inicio!`);
                 state = ""; // Reseta o estado após confirmação
                 todas_informacoes = []
             } else {

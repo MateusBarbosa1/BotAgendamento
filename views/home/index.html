@@ -40,28 +40,42 @@
       <a href="/home/wallyson" id="w" style="display: none;"></a>
       <a href="/home" id="b" style="display: none;"></a>
 
-      <form action="/home" method="post" class="date-form">
-        <input type="date" name="date" required>
-        <input type="submit" value="Ver Horarios">
-      </form>
-
       <div class="select">
-        <h2>Horarios Do Dia</h2>
+        <h2>Horarios Do Dia - Bruno</h2>
       </div>
-      <section class="agendamentos">
-        <% for (let i = 0;i < agendamentos.length;i++) { %>
-            <div class="agendamento-single">
-                <h2><%= agendamentos[i].time %></h2>
-                <p><%= agendamentos[i].name %></p>
-                <form action="/delete/id" method="post">
-                    <input type="text" name="" id="" style="display: none;" value="">
-                    <input type="submit" value="Concluir">
-                </form>
-            </div>
-        <% } %>
-      </section>
+      <section class="agendamentos" id="agendamentos-container">
+        <script>
+            const agendamentos = <%- JSON.stringify(agendamentos) %>;
+    
+            // Ordenar pelo horário
+            agendamentos.sort((a, b) => {
+                const timeA = new Date(`1970-01-01T${a.time}:00`);
+                const timeB = new Date(`1970-01-01T${b.time}:00`);
+                return timeA - timeB;
+            });
+    
+            // Renderizar os agendamentos no DOM
+            const container = document.getElementById('agendamentos-container');
+            agendamentos.forEach(agendamento => {
+                const div = document.createElement('div');
+                div.className = 'agendamento-single';
+                div.innerHTML = `
+                    <h2>${agendamento.time}</h2>
+                    <p style="font-weight: bold;">${agendamento.servico}</p>
+                    <p>${agendamento.name}</p>
+                    <form action="/delete/id" method="post">
+                        <input type="hidden" name="link" value="${window.location.pathname}">
+                        <input type="hidden" name="id" value="${agendamento.id}">
+                        <input type="submit" value="Concluir">
+                    </form>
+                `;
+                container.appendChild(div);
+            });
+        </script>
+    </section>
     
     <script src="/js/mobile-menu.js"></script>
+
     <script>
         const barbeiro = document.getElementById("barbeiro");
         const bruno = document.getElementById("b");

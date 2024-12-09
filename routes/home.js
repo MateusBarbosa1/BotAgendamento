@@ -7,10 +7,7 @@ module.exports = function(app) {
     app.get('/home/wallyson', (req,res) => {
         homeController.renderHome2(app,req,res);
     });
-    app.post('/home', (req,res) => {
-        homeController.searchDate(app,req,res);
-    });
-    app.post('/home/wallyson', (req,res) => {
-        homeController.searchDate2(app,req,res);
+    app.post('/delete/id', (req,res) => {
+        homeController.deleteAgendamentoID(app,req,res);
     });
 }

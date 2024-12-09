@@ -10,9 +10,10 @@ async function getAgendamentosNumber(number) {
     const agendamentos = await prisma.agendamentos.findMany({ where: { numero: number } });
     return agendamentos;
 }
-async function setAgendamentos(barber, data,hora,nome, numero, horario_agendamento) {
-    await prisma.agendamentos.create({
+async function setAgendamentos(servico,barber, data,hora,nome, numero, horario_agendamento) {
+    const agendamento = await prisma.agendamentos.create({
         data: {
+            servico: servico,
             barbeiro: barber,
             date: data,
             time: hora,
@@ -21,10 +22,14 @@ async function setAgendamentos(barber, data,hora,nome, numero, horario_agendamen
             horarioAgendamento: horario_agendamento
         }
     });
+    return agendamento;
 }
-
+async function deleteAgendamentoID(id) {
+    await prisma.agendamentos.deleteMany({ where: { id: id } });
+}
 module.exports = {
     getAgendamentos,
     setAgendamentos,
-    getAgendamentosNumber
+    getAgendamentosNumber,
+    deleteAgendamentoID
 }

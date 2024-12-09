@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/styles/home.css">
+    <link rel="stylesheet" href="/styles/gerenciamento.css">
+    <title>Bruno Barber - Agendamentos</title>
+</head>
+<body>
+    <header>
+        <div class="logo">
+          <img src="/img/logo.png" />
+        </div>
+        <!--menu-->
+        <nav>
+          <div class="mobile-menu">
+            <div class="line1"></div>
+            <div class="line2"></div>
+            <div class="line3"></div>
+          </div>
+          <ul class="nav-list">
+            <li>
+              <a href="/">Início</a>
+            </li>
+            <li><a href="/gerenciar" style="font-weight: bold; color: white">Gerenciar</a></li>
+          </ul>
+        </nav>
+  
+        <!--menu-->
+      </header>
+
+      <div class="option">
+        <a href="/gerenciar">VOLTAR</a>
+      </div>
+
+
+      
+      
+      <div class="select">
+        <h2>Gerenciar Data/hora</h2>
+      </div>
+      <form action="" method="post" class="date-form">
+        <input type="date" name="date" id="" required>
+        <input type="submit" value="Gerenciar">
+      </form>
+
+    <% if(!horarios == false) { %>
+        <section class="horarios">
+            <form action="/gerenciar/bruno/data_hora/delete" method="post">
+                <% for(let i = 0; i < horarios[0].horarios.length; i++) { %>
+                <div class="horario">
+                    <h2><%= horarios[0].horarios[i] %></h2>
+                    <!-- Atribua um name comum e valores para os checkboxes -->
+                    <input type="checkbox" name="selectedHorarios" value="<%= horarios[0].horarios[i] %>">
+                </div>
+                <% } %>
+                <input type="text" name="date" style="display: none;" id="" value="<%= date %>">
+                <input type="submit" value="Deixar Indisponível">
+            </form>
+        </section>
+    <% } %>
+    
+      
+
+    <script src="/js/mobile-menu.js"></script>
+</body>
+</html>

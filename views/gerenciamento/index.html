@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/styles/home.css">
+    <link rel="stylesheet" href="/styles/gerenciamento.css">
+    <title>Bruno Barber - Agendamentos</title>
+</head>
+<body>
+    <header>
+        <div class="logo">
+          <img src="/img/logo.png" />
+        </div>
+        <!--menu-->
+        <nav>
+          <div class="mobile-menu">
+            <div class="line1"></div>
+            <div class="line2"></div>
+            <div class="line3"></div>
+          </div>
+          <ul class="nav-list">
+            <li>
+              <a href="/">Início</a>
+            </li>
+            <li><a href="/gerenciar" style="font-weight: bold; color: white">Gerenciar</a></li>
+          </ul>
+        </nav>
+  
+        <!--menu-->
+      </header>
+
+      <section class="select-barber">
+        <div class="bruno">
+            <a href="/gerenciar/bruno">Bruno</a>
+        </div>
+        <div class="wallyson">
+            <a href="/gerenciar/wallyson">Wallyson</a>
+        </div>
+      </section>
+    
+      
+    
+    <script src="/js/mobile-menu.js"></script>
+    <script>
+        const barbeiro = document.getElementById("barbeiro");
+        const bruno = document.getElementById("b");
+        const wallyson = document.getElementById("w");
+
+        barbeiro.addEventListener('change', () => {
+            const barbeiroValue = barbeiro.value;
+            if(barbeiroValue == "Wallyson") {
+                wallyson.click();
+            } else if(barbeiroValue == "Bruno") {
+                bruno.click();
+            }
+        });
+    </script>
+</body>
+</html>

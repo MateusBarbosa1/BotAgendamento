@@ -103,7 +103,17 @@ option {
 select:focus {
     outline: none;
 }
-
+.select input {
+  width: 200px;
+    padding: 10px;
+    margin: 2px 10px;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    background-color: #f4f4f4;
+    color: #333;
+    cursor: pointer;
+}
 .date-form {
   margin: 30px;
 }
@@ -148,7 +158,11 @@ select:focus {
   padding: 10px 20px;
   cursor: pointer;
 }
-
+@media screen and (max-width: 490px) {
+  .select h2 {
+    font-size: 17px;
+  }
+}
 @media (max-width: 999px) {
   body {
     overflow-x: hidden;

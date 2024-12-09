@@ -1,0 +1,87 @@
+.select-barber {
+    width: 90%;
+    display: flex;
+    margin: 5%;
+    justify-content: space-around;
+    flex-wrap: wrap;
+}
+.select-barber .bruno {
+    width: 250px;
+    border: 2px solid black;
+    border-radius: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 20px 0;
+}
+.select-barber .wallyson {
+    width: 250px;
+    border: 2px solid black;
+    border-radius: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 20px 0;
+}
+.bruno a {
+    padding: 20px;
+    text-decoration: none;
+    font-weight: bold;
+    color: black;
+}
+.wallyson a {
+    padding: 20px;
+    text-decoration: none;
+    font-weight: bold;
+    color: black;
+}
+.option {
+    margin: 30px;
+    background: black;
+    border-radius: 30px;
+    padding: 15px;
+    text-align: center;
+}
+.option a {
+    color: white;
+    text-decoration: none;
+    font-size: 22px;
+}
+.horarios {
+    width: 95%;
+    margin: 30px 2.5%;
+}
+.horario {
+    border: 1px solid black;
+    margin: 20px 0;
+    border-radius: 8px;
+    padding: 15px 20px;
+    display: flex;
+    justify-content: space-between;
+}
+.horarios input[type="checkbox"]{
+    width: 20px;
+}
+.horarios input[type="submit"] {
+    width: 200px;
+    padding: 15px 20px;
+    background: red;
+    border-radius: 15px;
+    border: none;
+    cursor: pointer;
+    color: white;
+    font-weight: bold;
+}
+.agendamentos input[type="checkbox"] {
+    width: 20px;
+}
+#agendamentos-container input[type="submit"] {
+    width: 200px;
+    padding: 15px 20px;
+    background: red;
+    border-radius: 15px;
+    border: none;
+    cursor: pointer;
+    color: white;
+    font-weight: bold;
+}
