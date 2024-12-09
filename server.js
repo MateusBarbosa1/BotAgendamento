@@ -9,6 +9,7 @@ const cookieParser = require("cookie-parser");
 const app = express();
 const path = require("path");
 
+app.use(express.json());
 app.use(cookieParser());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.engine('html', require("ejs").renderFile);

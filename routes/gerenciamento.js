@@ -37,8 +37,14 @@ module.exports = function(app) {
     app.post('/gerenciar/bruno/data_hora', (req,res) => {
         gerenciamentoControllers.gerenciarDataHoraBruno(app,req,res);
     });
+    app.post('/gerenciar/wallyson/data_hora', (req,res) => {
+        gerenciamentoControllers.gerenciarDataHoraWallyson(app,req,res);
+    });
     app.post('/gerenciar/bruno/data_hora/delete', (req,res) => {
         gerenciamentoControllers.deletarDataHoraBruno(app,req,res);
+    });
+    app.post('/gerenciar/wallyson/data_hora/delete', (req,res) => {
+        gerenciamentoControllers.deletarDataHoraWallyson(app,req,res);
     });
     app.post('/gerenciar/bruno/agendamento/delete', (req,res) => {
         gerenciamentoControllers.deleteAgendamento(app,req,res, "b");
@@ -49,4 +55,26 @@ module.exports = function(app) {
     app.post('/gerenciar/bruno/horarios', (req,res) => {
         gerenciamentoControllers.getHorariosBruno(app,req,res);
     })
+    app.post('/gerenciar/wallyson/horarios', (req,res) => {
+        gerenciamentoControllers.getHorariosWallyson(app,req,res);
+    })
+    app.post('/horarios/bruno/update', (req,res) => {
+        gerenciamentoControllers.updateHorariosBruno(app,req,res);
+    });
+    app.post('/horarios/bruno/add', (req,res) => {
+        gerenciamentoControllers.addHorarioBruno(app,req,res);
+    });
+    app.post('/horarios/bruno/delete', (req,res) => {
+        gerenciamentoControllers.deleteHorarioBruno(app,req,res);
+    });
+    app.post('/horarios/wallyson/update', (req,res) => {
+        gerenciamentoControllers.updateHorariosWallyson(app,req,res);
+    });
+    app.post('/horarios/wallyson/add', (req,res) => {
+        gerenciamentoControllers.addHorarioWallyson(app,req,res);
+    });
+    app.post('/horarios/wallyson/delete', (req,res) => {
+        gerenciamentoControllers.deleteHorarioWallyson(app,req,res);
+    });
+    
 }

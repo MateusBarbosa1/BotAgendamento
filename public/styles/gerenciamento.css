@@ -1,3 +1,7 @@
+.body {
+    height: 100%;
+}
+
 .select-barber {
     width: 90%;
     display: flex;
@@ -84,4 +88,60 @@
     cursor: pointer;
     color: white;
     font-weight: bold;
+}
+.horarios-gerenciamento {
+    width: 95%;
+    margin: 30px 2.5%;
+}
+.horario-single {
+    margin: 20px 0;
+    border: 2px solid black;
+    border-radius: 12px;
+    padding: 15px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.buttons button {
+    cursor: pointer;
+}
+.layer {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw; /* 100% da largura da viewport */
+    height: 100vh; /* 100% da altura da viewport */
+    background: rgba(0, 0, 0, 0.7); /* Fundo semi-transparente */
+    z-index: 9999; /* Garante que fique acima de outros elementos */
+    display: none; /* Inicialmente escondido */
+    justify-content: center;
+    align-items: center;
+}
+.layer form {
+    background: #000;
+    border-radius: 10px;
+    display: flex;
+    flex-wrap: wrap;
+    padding: 20px;
+}
+.layer form input[type="text"] {
+    width: 95%;
+    margin: 0 2.5%;
+    outline: none;
+    padding: 10px 20px;
+    border-radius: 7px;
+    border: none;
+    font-size: 15px;
+}
+.layer form input[type="submit"] {
+    width: 95%;
+    margin: 20px 2.5%;
+    background: rgb(255, 104, 29);
+    padding: 10px 20px;
+    border-radius: 7px;
+    color: white;
+    font-weight: bold;
+    border: none;
+    font-size: 17px;
+    cursor: pointer;
 }

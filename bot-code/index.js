@@ -151,10 +151,13 @@ module.exports = function(Client, LocalAuth, qrcode) {
                     for (let i = 0; i < agendamentos.length; i++) {
                         horariosIndisponiveis.push(agendamentos[i].time);
                     }
-                
+                    
                     // Filtra os horários disponíveis removendo os indisponíveis
                     horariosDisponiveisArray = horarios[0].horarios.filter(horario => !horariosIndisponiveis.includes(horario));
-                
+                    if (horariosDisponiveisArray.length == 0) {
+                        message.reply('Desculpe infelizmente não tem nenhum horarios disponivel para essa data!');
+                        return;
+                    }
                     // Adiciona os horários ao string com a posição +1
                     horariosDisponiveisArray.forEach((horario, index) => {
                         horariosDisponiveis += `🕗 ${horario}\n`;
@@ -176,7 +179,10 @@ module.exports = function(Client, LocalAuth, qrcode) {
                 
                     // Filtra os horários disponíveis removendo os indisponíveis
                     horariosDisponiveisArray = horarios[0].horarios.filter(horario => !horariosIndisponiveis.includes(horario));
-                
+                    if (horariosDisponiveisArray.length == 0) {
+                        message.reply('Desculpe infelizmente não tem nenhum horarios disponivel para essa data!');
+                        return;
+                    }
                     // Adiciona os horários ao string com a posição +1
                     horariosDisponiveisArray.forEach((horario, index) => {
                         horariosDisponiveis += `🕗 ${horario}\n`;
@@ -198,7 +204,10 @@ module.exports = function(Client, LocalAuth, qrcode) {
                 
                     // Filtra os horários disponíveis removendo os indisponíveis
                     horariosDisponiveisArray = horarios[0].horarios.filter(horario => !horariosIndisponiveis.includes(horario));
-                
+                    if (horariosDisponiveisArray.length == 0) {
+                        message.reply('Desculpe infelizmente não tem nenhum horarios disponivel para essa data!');
+                        return;
+                    }
                     // Adiciona os horários ao string com a posição +1
                     horariosDisponiveisArray.forEach((horario, index) => {
                         horariosDisponiveis += `🕗 ${horario}\n`;
@@ -220,7 +229,10 @@ module.exports = function(Client, LocalAuth, qrcode) {
                 
                     // Filtra os horários disponíveis removendo os indisponíveis
                     horariosDisponiveisArray = horarios[0].horarios.filter(horario => !horariosIndisponiveis.includes(horario));
-                
+                    if (horariosDisponiveisArray.length == 0) {
+                        message.reply('Desculpe infelizmente não tem nenhum horarios disponivel para essa data!');
+                        return;
+                    }
                     // Adiciona os horários ao string com a posição +1
                     horariosDisponiveisArray.forEach((horario, index) => {
                         horariosDisponiveis += `🕗 ${horario}\n`;
@@ -242,7 +254,10 @@ module.exports = function(Client, LocalAuth, qrcode) {
                 
                     // Filtra os horários disponíveis removendo os indisponíveis
                     horariosDisponiveisArray = horarios[0].horarios.filter(horario => !horariosIndisponiveis.includes(horario));
-                
+                    if (horariosDisponiveisArray.length == 0) {
+                        message.reply('Desculpe infelizmente não tem nenhum horarios disponivel para essa data!');
+                        return;
+                    }
                     // Adiciona os horários ao string com a posição +1
                     horariosDisponiveisArray.forEach((horario, index) => {
                         horariosDisponiveis += `🕗 ${horario}\n`;
@@ -264,7 +279,10 @@ module.exports = function(Client, LocalAuth, qrcode) {
                 
                     // Filtra os horários disponíveis removendo os indisponíveis
                     horariosDisponiveisArray = horarios[0].horarios.filter(horario => !horariosIndisponiveis.includes(horario));
-                
+                    if (horariosDisponiveisArray.length == 0) {
+                        message.reply('Desculpe infelizmente não tem nenhum horarios disponivel para essa data!');
+                        return;
+                    }
                     // Adiciona os horários ao string com a posição +1
                     horariosDisponiveisArray.forEach((horario, index) => {
                         horariosDisponiveis += `🕗 ${horario}\n`;
@@ -288,7 +306,10 @@ module.exports = function(Client, LocalAuth, qrcode) {
                 
                     // Filtra os horários disponíveis removendo os indisponíveis
                     horariosDisponiveisArray = horarios[0].horarios.filter(horario => !horariosIndisponiveis.includes(horario));
-                
+                    if (horariosDisponiveisArray.length == 0) {
+                        message.reply('Desculpe infelizmente não tem nenhum horarios disponivel para essa data!');
+                        return;
+                    }
                     // Adiciona os horários ao string com a posição +1
                     horariosDisponiveisArray.forEach((horario, index) => {
                         horariosDisponiveis += `🕗 ${horario}\n`;
@@ -310,7 +331,10 @@ module.exports = function(Client, LocalAuth, qrcode) {
                 
                     // Filtra os horários disponíveis removendo os indisponíveis
                     horariosDisponiveisArray = horarios[0].horarios.filter(horario => !horariosIndisponiveis.includes(horario));
-                
+                    if (horariosDisponiveisArray.length == 0) {
+                        message.reply('Desculpe infelizmente não tem nenhum horarios disponivel para essa data!');
+                        return;
+                    }
                     // Adiciona os horários ao string com a posição +1
                     horariosDisponiveisArray.forEach((horario, index) => {
                         horariosDisponiveis += `🕗 ${horario}\n`;
@@ -332,7 +356,10 @@ module.exports = function(Client, LocalAuth, qrcode) {
                 
                     // Filtra os horários disponíveis removendo os indisponíveis
                     horariosDisponiveisArray = horarios[0].horarios.filter(horario => !horariosIndisponiveis.includes(horario));
-                
+                    if (horariosDisponiveisArray.length == 0) {
+                        message.reply('Desculpe infelizmente não tem nenhum horarios disponivel para essa data!');
+                        return;
+                    }
                     // Adiciona os horários ao string com a posição +1
                     horariosDisponiveisArray.forEach((horario, index) => {
                         horariosDisponiveis += `🕗 ${horario}\n`;
@@ -354,7 +381,10 @@ module.exports = function(Client, LocalAuth, qrcode) {
                 
                     // Filtra os horários disponíveis removendo os indisponíveis
                     horariosDisponiveisArray = horarios[0].horarios.filter(horario => !horariosIndisponiveis.includes(horario));
-                
+                    if (horariosDisponiveisArray.length == 0) {
+                        message.reply('Desculpe infelizmente não tem nenhum horarios disponivel para essa data!');
+                        return;
+                    }
                     // Adiciona os horários ao string com a posição +1
                     horariosDisponiveisArray.forEach((horario, index) => {
                         horariosDisponiveis += `🕗 ${horario}\n`;
@@ -376,7 +406,10 @@ module.exports = function(Client, LocalAuth, qrcode) {
                 
                     // Filtra os horários disponíveis removendo os indisponíveis
                     horariosDisponiveisArray = horarios[0].horarios.filter(horario => !horariosIndisponiveis.includes(horario));
-                
+                    if (horariosDisponiveisArray.length == 0) {
+                        message.reply('Desculpe infelizmente não tem nenhum horarios disponivel para essa data!');
+                        return;
+                    }
                     // Adiciona os horários ao string com a posição +1
                     horariosDisponiveisArray.forEach((horario, index) => {
                         horariosDisponiveis += `🕗 ${horario}\n`;
@@ -398,7 +431,10 @@ module.exports = function(Client, LocalAuth, qrcode) {
                 
                     // Filtra os horários disponíveis removendo os indisponíveis
                     horariosDisponiveisArray = horarios[0].horarios.filter(horario => !horariosIndisponiveis.includes(horario));
-                
+                    if (horariosDisponiveisArray.length == 0) {
+                        message.reply('Desculpe infelizmente não tem nenhum horarios disponivel para essa data!');
+                        return;
+                    }
                     // Adiciona os horários ao string com a posição +1
                     horariosDisponiveisArray.forEach((horario, index) => {
                         horariosDisponiveis += `🕗 ${horario}\n`;

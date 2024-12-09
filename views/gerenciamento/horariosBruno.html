@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="/styles/home.css">
     <link rel="stylesheet" href="/styles/gerenciamento.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
     <title>Bruno Barber - Agendamentos</title>
 </head>
 <body>
@@ -34,7 +35,7 @@
         <a href="/gerenciar">VOLTAR</a>
       </div>
 
-
+      <% if(horarios == false) { %>
       <div class="select">
         <form action="" method="POST">
             <select name="diaSemana" id="select">
@@ -48,16 +49,170 @@
             <input type="submit" value="Gerenciar">
         </form>
       </div>
+      <% } %>
 
-      <section class="horarios-gerenciamento">
-        <div class="horario-single">
-            <h2>09:00</h2>
-            
+      <% if(horarios) { %>
+        <div class="select">
+          <form action="" method="POST">
+              <select name="diaSemana" id="select">
+                <% if(horarios[0].diaSemana == "Segunda") { %>
+                  <option value="Segunda" selected>Segunda-feira</option>
+                  <option value="Terca">Terça-feira</option>
+                  <option value="Quarta">Quarta-feira</option>
+                  <option value="Quinta">Quinta-feira</option>
+                  <option value="Sexta">Sexta-feira</option>
+                  <option value="Sabado">Sabado</option>
+                <% } %>
+                <% if(horarios[0].diaSemana == "Terca") { %>
+                  <option value="Segunda">Segunda-feira</option>
+                  <option value="Terca" selected>Terça-feira</option>
+                  <option value="Quarta">Quarta-feira</option>
+                  <option value="Quinta">Quinta-feira</option>
+                  <option value="Sexta">Sexta-feira</option>
+                  <option value="Sabado">Sabado</option>
+                <% } %>
+                <% if(horarios[0].diaSemana == "Quarta") { %>
+                  <option value="Segunda">Segunda-feira</option>
+                  <option value="Terca">Terça-feira</option>
+                  <option value="Quarta" selected>Quarta-feira</option>
+                  <option value="Quinta">Quinta-feira</option>
+                  <option value="Sexta">Sexta-feira</option>
+                  <option value="Sabado">Sabado</option>
+                <% } %>
+                <% if(horarios[0].diaSemana == "Quinta") { %>
+                  <option value="Segunda">Segunda-feira</option>
+                  <option value="Terca">Terça-feira</option>
+                  <option value="Quarta">Quarta-feira</option>
+                  <option value="Quinta" selected>Quinta-feira</option>
+                  <option value="Sexta">Sexta-feira</option>
+                  <option value="Sabado">Sabado</option>
+                <% } %>
+                <% if(horarios[0].diaSemana == "Sexta") { %>
+                  <option value="Segunda">Segunda-feira</option>
+                  <option value="Terca">Terça-feira</option>
+                  <option value="Quarta">Quarta-feira</option>
+                  <option value="Quinta">Quinta-feira</option>
+                  <option value="Sexta" selected>Sexta-feira</option>
+                  <option value="Sabado">Sabado</option>
+                <% } %>
+                <% if(horarios[0].diaSemana == "Sabado") { %>
+                  <option value="Segunda">Segunda-feira</option>
+                  <option value="Terca">Terça-feira</option>
+                  <option value="Quarta">Quarta-feira</option>
+                  <option value="Quinta">Quinta-feira</option>
+                  <option value="Sexta">Sexta-feira</option>
+                  <option value="Sabado" selected>Sabado</option>
+                <% } %>
+              </select>
+              <input type="submit" value="Gerenciar">
+          </form>
         </div>
-      </section>
+      <section class="horarios-gerenciamento">
+        <% for(let i = 0;i < horarios[0].horarios.length;i++) { %>
+          <div class="horario-single"> 
+            <h2 class="horario-text"><%= horarios[0].horarios[i] %></h2>
+            <div class="buttons">
+                <button class="edit-btn" data-horario="<%= horarios[0].horarios[i] %>">
+                    <span class="material-symbols-outlined">edit</span>
+                </button>
+                <form action="/horarios/bruno/delete" method="post" style="display: none;">
+                  <input type="text" name="diaSemana" value="<%= horarios[0].diaSemana %>">
+                  <input type="text" name="horario" value="<%= horarios[0].horarios[i] %>">
+                </form>
+                <button class="delete-btn" ><span class="material-symbols-outlined">delete</span></button>
+                <button id="add"><span class="material-symbols-outlined">add</span></button>
+            </div>
+        </div>
+        <% } %>
+    </section>
+    <% } %>
 
-      
+    <div class="layer" id="update-layer">
+      <form action="/horarios/bruno/update" method="post">
+        <% if(horarios) { %>
+          <input type="text" name="diaSemana" value="<%= horarios[0].diaSemana %>" style="display: none;">
+          <% } %>
+          <input type="text" name="horario_antigo" id="horario_antigo" style="display: none;">
+          <input type="text" name="horario_novo" id="horario_novo">
+          <input type="submit" value="Atualizar">
+      </form>
+    </div>
+    <div class="layer" id="add-layer">
+      <form action="/horarios/bruno/add" method="post">
+        <% if(horarios) { %>
+          <input type="text" name="diaSemana" value="<%= horarios[0].diaSemana %>" style="display: none;">
+          <% } %>
+          <input type="text" name="horario_referencia" id="horario_referencia" style="display: none;">
+          <input type="text" name="horario_novo" id="horario_add_novo" placeholder="Novo horário">
+          <input type="submit" value="Adicionar">
+      </form>
+    </div>
+
+    
+  
 
     <script src="/js/mobile-menu.js"></script>
+      <script>
+        const editButtons = document.querySelectorAll('.edit-btn'); // Seleciona todos os botões de edição
+        const layerUpdate = document.getElementById('update-layer');
+        const inputHorarioAntigo = document.getElementById('horario_antigo'); // Campo oculto para o horário antigo
+        const inputHorarioNovo = document.getElementById('horario_novo'); // Campo visível para o horário novo
+
+        // Adiciona o evento de clique para cada botão
+        editButtons.forEach(button => {
+            button.addEventListener('click', (event) => {
+                event.preventDefault(); // Previne comportamento padrão
+                const horario = button.getAttribute('data-horario'); // Obtém o valor do horário
+                inputHorarioAntigo.value = horario; // Define o horário antigo no campo oculto
+                inputHorarioNovo.value = horario; // Preenche o campo visível com o horário atual para edição
+                layerUpdate.style.display = 'flex'; // Exibe a camada
+            });
+        });
+        </script>
+        <script>
+        // Fecha a camada ao clicar fora do formulário
+        layerUpdate.addEventListener('click', (event) => {
+            if (event.target === layerUpdate) { // Garante que foi clicado fora do formulário
+                layerUpdate.style.display = 'none';
+            }
+        });
+
+        const addButtons = document.querySelectorAll('#add'); // Seleciona todos os botões de adição
+        const addLayer = document.getElementById('add-layer');
+        const inputHorarioReferencia = document.getElementById('horario_referencia'); // Campo oculto para o horário de referência
+        const inputHorarioAddNovo = document.getElementById('horario_add_novo'); // Campo para o novo horário
+
+        // Adiciona o evento de clique para cada botão
+        addButtons.forEach(button => {
+            button.addEventListener('click', (event) => {
+                event.preventDefault(); // Previne comportamento padrão
+                const horario = button.parentElement.previousElementSibling.textContent; // Obtém o valor do horário clicado
+                inputHorarioReferencia.value = horario; // Define o horário de referência
+                inputHorarioAddNovo.value = ""; // Reseta o campo do novo horário
+                addLayer.style.display = 'flex'; // Exibe a camada
+            });
+        });
+
+        // Fecha a camada ao clicar fora do formulário
+        addLayer.addEventListener('click', (event) => {
+            if (event.target === addLayer) { // Garante que foi clicado fora do formulário
+                addLayer.style.display = 'none';
+            }
+        });
+      </script>
+      <script>
+        const deleteButtons = document.querySelectorAll('.delete-btn');
+
+        deleteButtons.forEach(button => {
+            button.addEventListener('click', (event) => {
+                event.preventDefault(); // Previne o comportamento padrão
+
+                // Encontra o formulário pai do botão de deletar
+                const form = button.previousElementSibling;
+
+                form.submit()
+            });
+        });
+      </script>
 </body>
 </html>
