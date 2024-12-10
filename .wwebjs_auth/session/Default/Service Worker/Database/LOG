@@ -1,2 +1,3 @@
-2024/12/10-17:54:43.389 dbe5 Creating DB /workspaces/BotAgendamento/.wwebjs_auth/session/Default/Service Worker/Database since it was missing.
-2024/12/10-17:54:43.394 dbe5 Reusing MANIFEST /workspaces/BotAgendamento/.wwebjs_auth/session/Default/Service Worker/Database/MANIFEST-000001
+2024/12/10-18:09:28.340 f4e2 Reusing MANIFEST /workspaces/BotAgendamento/.wwebjs_auth/session/Default/Service Worker/Database/MANIFEST-000001
+2024/12/10-18:09:28.340 f4e2 Recovering log #3
+2024/12/10-18:09:28.340 f4e2 Reusing old log /workspaces/BotAgendamento/.wwebjs_auth/session/Default/Service Worker/Database/000003.log 
