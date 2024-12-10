@@ -197,6 +197,9 @@ async function deleteHorarioWallyson(data) {
             },
         });
 
+    } catch (error) {
+        console.error('Erro ao deletar o horário:', error);
+        throw error;
     }
 }
 
