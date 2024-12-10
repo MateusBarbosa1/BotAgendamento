@@ -20,9 +20,6 @@ async function updateHorariosBruno(antigo,novo,diaSemana) {
         },
     });
 
-    if (!registros.length) {
-        throw new Error("Nenhum registro encontrado com o horário especificado.");
-    }
 
     // Atualiza cada registro encontrado
     for (const registro of registros) {
@@ -55,9 +52,6 @@ async function addHorarioBruno(horarioReferencia, horarioNovo, diaSemana) {
         },
     });
 
-    if (!registro) {
-        throw new Error("Horário de referência não encontrado.");
-    }
 
     // Calcula a nova lista de horários com o horário novo inserido após o de referência
     const novosHorarios = [];
@@ -83,10 +77,6 @@ async function deleteHorarioBruno(data) {
 
         const { diaSemana, horario } = data;
 
-        // Verifique se 'diaSemana' está definido
-        if (!diaSemana) {
-            throw new Error('O dia da semana não foi fornecido');
-        }
 
         // Primeiro, recupere o registro atual para obter a lista de horários
         const horarioAtual = await prisma.horariosBruno.findUnique({
@@ -95,9 +85,6 @@ async function deleteHorarioBruno(data) {
             },
         });
 
-        if (!horarioAtual) {
-            throw new Error('Horário não encontrado');
-        }
 
         // Crie uma nova lista de horários sem o horário a ser removido
         const novosHorarios = horarioAtual.horarios.filter(h => h !== horario);
@@ -127,9 +114,6 @@ async function updateHorariosWallyson(antigo,novo,diaSemana) {
         },
     });
 
-    if (!registros.length) {
-        throw new Error("Nenhum registro encontrado com o horário especificado.");
-    }
 
     // Atualiza cada registro encontrado
     for (const registro of registros) {
@@ -162,9 +146,6 @@ async function addHorarioWallyson(horarioReferencia, horarioNovo, diaSemana) {
         },
     });
 
-    if (!registro) {
-        throw new Error("Horário de referência não encontrado.");
-    }
 
     // Calcula a nova lista de horários com o horário novo inserido após o de referência
     const novosHorarios = [];
@@ -202,9 +183,6 @@ async function deleteHorarioWallyson(data) {
             },
         });
 
-        if (!horarioAtual) {
-            throw new Error('Horário não encontrado');
-        }
 
         // Crie uma nova lista de horários sem o horário a ser removido
         const novosHorarios = horarioAtual.horarios.filter(h => h !== horario);
@@ -219,9 +197,6 @@ async function deleteHorarioWallyson(data) {
             },
         });
 
-    } catch (error) {
-        console.error('Erro ao deletar o horário:', error);
-        throw error;
     }
 }
 
