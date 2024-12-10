@@ -6,8 +6,10 @@ module.exports.renderHome = async function(app,req,res) {
         res.redirect('/');
     } else {
         if(jwtDecode(token).user == "BrunoAdmin") {
+            const dataBrasileira = new Date(new Date().getTime() - (3 * 60 * 60 * 1000));
+            dataBrasileira.setHours(0, 0, 0, 0);
             const agendamentosModel = require('../models/agendamentosModel');
-            const agendamentos = await agendamentosModel.getAgendamentos(new Date(), "Bruno");
+            const agendamentos = await agendamentosModel.getAgendamentos(dataBrasileira, "Bruno");
             res.render('home/index', {agendamentos: agendamentos});
         } else {
             res.redirect('/');
@@ -22,8 +24,10 @@ module.exports.renderHome2 = async function(app,req,res) {
         res.redirect('/');
     } else {
         if(jwtDecode(token).user == "BrunoAdmin") {
+            const dataBrasileira = new Date(new Date().getTime() - (3 * 60 * 60 * 1000));
+            dataBrasileira.setHours(0, 0, 0, 0);
             const agendamentosModel = require('../models/agendamentosModel');
-            const agendamentos = await agendamentosModel.getAgendamentos(new Date(), "Wallyson");
+            const agendamentos = await agendamentosModel.getAgendamentos(dataBrasileira, "Wallyson");
             res.render('home/wallyson', {agendamentos: agendamentos});
         } else {
             res.redirect('/');

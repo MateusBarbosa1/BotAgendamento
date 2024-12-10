@@ -41,6 +41,7 @@ module.exports.renderGerenciamentoBruno = function(app,req,res) {
     }
 }
 module.exports.renderGerenciamentoAgendamentosBruno = function(app,req,res) {
+    
     res.render('gerenciamento/agendamentosBruno', {agendamentos: '', date: ''});
 }
 module.exports.renderGerenciamentoDataHoraBruno = function(app,req,res) {
@@ -61,13 +62,13 @@ module.exports.renderGerenciamentoHorariosWallyson = function(app,req,res) {
 module.exports.searchDateBruno = async function(app,req,res) {
     const agendamentosModel = require('../models/agendamentosModel');
     
-    const agendamentos = await agendamentosModel.getAgendamentos(req.body.date, "Bruno");
+    const agendamentos = await agendamentosModel.getAgendamentos(new Date(req.body.date), "Bruno");
     res.render("gerenciamento/agendamentosBruno", {agendamentos: agendamentos})
 }
 module.exports.searchDateWallyson = async function(app,req,res) {
     const agendamentosModel = require('../models/agendamentosModel');
     
-    const agendamentos = await agendamentosModel.getAgendamentos(req.body.date, "Wallyson");
+    const agendamentos = await agendamentosModel.getAgendamentos(new Date(req.body.date), "Wallyson");
     res.render("gerenciamento/agendamentosBruno", {agendamentos: agendamentos})
 }
 module.exports.gerenciarDataHoraBruno = async function(app,req,res) {
@@ -112,13 +113,22 @@ module.exports.deleteAgendamento = async function(app,req,res,barber) {
     const data = req.body;
 
     const agendamentosModel = require('../models/agendamentosModel');
+    const { send } = require('../bot-code/index');
+
     if(Array.isArray(data.selectedAgendamentos)) {
         for(let i = 0;i < data.selectedAgendamentos.length;i++) {
-            console.log(data.selectedAgendamentos[i])
-            await agendamentosModel.deleteAgendamentoID(data.selectedAgendamentos[i]);
+            const agendamento = await agendamentosModel.deleteAgendamentoID(data.selectedAgendamentos[i]);
+            const date = new Date(agendamento.date);
+            if(agendamento.numero != "local") {
+                send(agendamento.numero, `🚨 SEU AGENDAMENTO FOI CANCELADO!\n\n👨 ${agendamento.name}\n📅 ${date.getDate()}/${date.getMonth()+1}/${date.getFullYear()}\n🕗 ${agendamento.time}`);
+            }
         }
     } else {
-        await agendamentosModel.deleteAgendamentoID(data.selectedAgendamentos); 
+        const agendamento = await agendamentosModel.deleteAgendamentoID(data.selectedAgendamentos); 
+        const date = new Date(agendamento.date);
+        if(agendamento.numero != "local") {
+            send(agendamento.numero, `🚨 SEU AGENDAMENTO FOI CANCELADO!\n\n👨 ${agendamento.name}\n📅 ${date.getDate()}/${date.getMonth()+1}/${date.getFullYear()}\n🕗 ${agendamento.time}`)
+        }
     }
     
     if(barber == "b") {
@@ -182,4 +192,58 @@ module.exports.deleteHorarioWallyson = async function deleteHorarioWallyson(app,
     const horariosModel = require('../models/horariosModel');
     await horariosModel.deleteHorarioWallyson(data);   
     res.redirect('/gerenciar/wallyson/horarios');
+}
+module.exports.renderCreateAgendamentoBruno = async function(app,req,res) {
+    const init_query = req.query;
+    if(Object.values(init_query).length === 0) {
+        res.render('gerenciamento/createAgendamentoBruno', {init_query: false, horarios: false});        
+    } else {
+        const agendamentosModel = require('../models/agendamentosModel');
+        const dias = ["Segunda","Terca","Quarta","Quinta","Sexta","Sabado"];
+        const horariosModel = require("../models/horariosModel");
+        const horarios = await horariosModel.getHorariosBruno(dias[new Date(init_query.date).getDay()]);
+        const agendamentos = await agendamentosModel.getAgendamentos(new Date(init_query.date), init_query.barbeiro);
+        let horariosIndisponiveis = [];
+        let horariosDisponiveis = [];
+        for (let i = 0;i < agendamentos.length;i++) {
+            horariosIndisponiveis.push(agendamentos[i].time);
+        }
+
+        horariosDisponiveis = horarios[0].horarios.filter(horario => !horariosIndisponiveis.includes(horario));
+        res.render('gerenciamento/createAgendamentoBruno', {init_query: init_query, horarios: horariosDisponiveis})
+    }
+}
+module.exports.createAgendamentoBruno = async function(app,req,res) {
+    const data = req.body;
+
+    const agendamentosModel = require('../models/agendamentosModel');
+    await agendamentosModel.setAgendamentos(data.servico,data.barbeiro,new Date(data.date),data.horario,data.name,'local',new Date());
+    res.redirect('/gerenciar/bruno/create_agendamento');
+}
+module.exports.renderCreateAgendamentoWallyson = async function(app,req,res) {
+    const init_query = req.query;
+    if(Object.values(init_query).length === 0) {
+        res.render('gerenciamento/createAgendamentoWallyson', {init_query: false, horarios: false});        
+    } else {
+        const agendamentosModel = require('../models/agendamentosModel');
+        const dias = ["Segunda","Terca","Quarta","Quinta","Sexta","Sabado"];
+        const horariosModel = require("../models/horariosModel");
+        const horarios = await horariosModel.getHorariosWallyson(dias[new Date(init_query.date).getDay()]);
+        const agendamentos = await agendamentosModel.getAgendamentos(new Date(init_query.date), init_query.barbeiro);
+        let horariosIndisponiveis = [];
+        let horariosDisponiveis = [];
+        for (let i = 0;i < agendamentos.length;i++) {
+            horariosIndisponiveis.push(agendamentos[i].time);
+        }
+
+        horariosDisponiveis = horarios[0].horarios.filter(horario => !horariosIndisponiveis.includes(horario));
+        res.render('gerenciamento/createAgendamentoWallyson', {init_query: init_query, horarios: horariosDisponiveis})
+    }
+}
+module.exports.createAgendamentoWallyson = async function(app,req,res) {
+    const data = req.body;
+
+    const agendamentosModel = require('../models/agendamentosModel');
+    await agendamentosModel.setAgendamentos(data.servico,data.barbeiro,new Date(data.date),data.horario,data.name,'local',new Date());
+    res.redirect('/gerenciar/wallyson/create_agendamento');
 }

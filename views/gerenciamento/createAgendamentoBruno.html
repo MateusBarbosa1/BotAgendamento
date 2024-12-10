@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/styles/home.css">
+    <link rel="stylesheet" href="/styles/gerenciamento.css">
+    <title>Bruno Barber - Agendamentos</title>
+</head>
+<body>
+    <header>
+        <div class="logo">
+          <img src="/img/logo.png" />
+        </div>
+        <!--menu-->
+        <nav>
+          <div class="mobile-menu">
+            <div class="line1"></div>
+            <div class="line2"></div>
+            <div class="line3"></div>
+          </div>
+          <ul class="nav-list">
+            <li>
+              <a href="/">Início</a>
+            </li>
+            <li><a href="/gerenciar" style="font-weight: bold; color: white">Gerenciar</a></li>
+          </ul>
+        </nav>
+  
+        <!--menu-->
+      </header>
+
+      <div class="option">
+        <a href="/gerenciar">VOLTAR</a>
+      </div>
+
+
+      
+      
+      <div class="select">
+        <h2>Criar Agendamento</h2>
+      </div>
+      
+      <% if(init_query == false) { %>
+      <form action="" method="get" class="register">
+        <select name="servico" id="">
+          <option>Escolha o Serviço</option>
+          <option value="Cabelo">Cabelo</option>
+          <option value="Barba">Barba</option>
+          <option value="Cabelo/Barba">Cabelo/Barba</option>
+        </select>
+        <select name="barbeiro" id="">
+          <option>Escolha seu Barbeiro</option>
+          <option value="Bruno">Bruno</option>
+          <option value="Wallyson">Wallyson</option>
+        </select>
+        <input type="date" name="date">
+        <input type="submit" value="Ver Horarios">
+      </form>
+      <% } else { %>
+        <form action="" method="post" class="register">
+          <select name="servico" id="">
+            <% if(init_query.servico == "Cabelo") { %>
+            <option value="Cabelo" selected>Cabelo</option>
+            <option value="Barba">Barba</option>
+            <option value="Cabelo/Barba">Cabelo/Barba</option>
+            <% } %>
+            <% if(init_query.servico == "Barba") { %>
+              <option value="Cabelo">Cabelo</option>
+              <option value="Barba" selected>Barba</option>
+              <option value="Cabelo/Barba">Cabelo/Barba</option>
+            <% } %>
+            <% if(init_query.servico == "Cabelo/Barba") { %>
+              <option value="Cabelo">Cabelo</option>
+              <option value="Barba">Barba</option>
+              <option value="Cabelo/Barba" selected>Cabelo/Barba</option>
+            <% } %>
+          </select>
+          <select name="barbeiro" id="">
+            <% if (init_query.barbeiro == "Bruno") { %>
+              <option value="Bruno" selected>Bruno</option>
+              <option value="Wallyson">Wallyson</option>
+            <% } %>
+            <% if (init_query.barbeiro == "Wallyson") { %>
+              <option value="Bruno">Bruno</option>
+              <option value="Wallyson" selected>Wallyson</option>
+            <% } %>
+          </select>
+          <input type="date" name="date" value="<%= init_query.date %>" required>
+          <select name="horario" id="">
+            <% for(let i = 0;i < horarios.length;i++) { %>
+              <option value="<%= horarios[i] %>"><%= horarios[i] %></option>
+            <% } %>
+          </select>
+          <input type="text" name="name" id="" placeholder="Nome*" required>
+          <input type="submit" value="Agendar">
+        </form>
+      <% } %>
+
+    <script src="/js/mobile-menu.js"></script>
+</body>
+</html>

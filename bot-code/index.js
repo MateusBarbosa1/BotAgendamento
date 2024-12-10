@@ -39,17 +39,20 @@ module.exports = function(Client, LocalAuth, qrcode) {
     // Confirmar login
     client.on('ready', () => {
         console.log('Bot está conectado!');
+        module.exports.send = function(number,message) {
+            client.sendMessage(number,message);
+        }
     });
     
     // Responder mensagens
-    client.on('message_create', async (message) => {
+    client.on('message', async (message) => {
 
         // Verifica se o usuário está iniciando a conversa com "oi"
         if (message.body.toLowerCase() === 'oi' || message.body == "0") {
             usuarioAtual = message.from;
             todas_informacoes = []
             state = ""
-            message.reply(`👋 Olá! Seja Bem Vindo!\nVamos agendar seu corte? ✂️💇‍♂️\n\n🗓️ Escolha uma das opções abaixo para começar:\n\n📅 Agendar um corte - 1\n🔄 Cancelar um agendamento - 2\n💬 Falar com um atendente - 3`);
+            message.reply(`👋 Olá! Seja Bem Vindo!\nVamos agendar seu atendimento? ✂️💇‍♂️\n\n🗓️ Escolha uma das opções abaixo para começar:\n\n📅 Agendar um corte - 1\n🔄 Cancelar um agendamento - 2\n💬 Falar com um atendente - 3`);
             return;
         }
 
@@ -72,7 +75,7 @@ module.exports = function(Client, LocalAuth, qrcode) {
 
             }
 
-            message.reply("Ola, selecione qual serviço você deseja!\n\n1 - Cabelo\n2 - Barba\n3 - Cabelo/Barba\n\nDigite 0 para voltar ao inicio!")
+            message.reply("Selecione qual serviço você deseja!\n\n1 - Cabelo\n2 - Barba\n3 - Cabelo/Barba\n\nDigite 0 para voltar ao inicio!")
             state = "servico"
             return
         }
@@ -110,13 +113,13 @@ module.exports = function(Client, LocalAuth, qrcode) {
             return
         }
 
-        if(state == "barber" && message.body.toLowerCase() == "b") {
+        if(state == "barber" && message.body.toLowerCase() == "b" || state == "barber" && message.body.toLowerCase() == "bruno") {
             message.reply('📅 Digite a data do corte!\n\nNo formato: DD/MM/AAAA\nExemplo: 23/12/2024\n\nDigite 0 para voltar ao inicio!');
             state = "data";
             todas_informacoes.push("Bruno");
             return;
         }
-        if(state == "barber" && message.body.toLowerCase() == "w") {
+        if(state == "barber" && message.body.toLowerCase() == "w" || state == "barber" && message.body.toLowerCase() == "wallyson") {
             message.reply('📅 Digite a data do corte!\n\nNo formato: DD/MM/AAAA\nExemplo: 23/12/2024\n\nDigite 0 para voltar ao inicio!');
             state = "data";
             todas_informacoes.push("Wallyson");
@@ -135,7 +138,6 @@ module.exports = function(Client, LocalAuth, qrcode) {
                 message.reply('🚫 A data escolhida não pode ser uma data passada. Por favor, escolha uma data futura.');
                 return; // Interrompe a execução se a data for inválida
             }
-            console.log(dataRecebida.getDay())
             if(dataRecebida.getDay() == 0) { // DOMINGO
                 message.reply("😭 Desculpe, não trabalhamos no Domingo!\n\nDigite 0 para voltar ao inicio!")
             }
@@ -450,7 +452,7 @@ module.exports = function(Client, LocalAuth, qrcode) {
         // Verifica se o usuário está escolhendo um horário disponível
         if (state == "horas" && horariosDisponiveisArray.includes(message.body)) {
             todas_informacoes.push(message.body);
-            message.reply('👏 Bela escolha!\n\nAgora para confirmar seu agendamento: \n\n📅 '+todas_informacoes[2]+'\n🕑 '+todas_informacoes[3]+'\n\nDigite seu nome completo!\n\nDigite 0 para voltar ao inicio!');
+            message.reply('👏 Bela escolha!\n\nAgora para confirmar seu agendamento: \n\n📅 '+todas_informacoes[2]+'\n🕑 '+todas_informacoes[3]+'\n\nDigite seu nome!\n\nDigite 0 para voltar ao inicio!');
             state = "name";
             return;
         }
@@ -464,11 +466,13 @@ module.exports = function(Client, LocalAuth, qrcode) {
                 state = ""; // Reseta o estado após confirmação
                 todas_informacoes = []
             } else {
-                message.reply('🚫 Por favor, digite seu nome completo para confirmar o agendamento.');
+                message.reply('🚫 Por favor, digite seu nome para confirmar o agendamento.');
             }
             return;
         }
     });
 
+
+    
     client.initialize();
 }

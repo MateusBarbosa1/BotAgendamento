@@ -25,7 +25,8 @@ async function setAgendamentos(servico,barber, data,hora,nome, numero, horario_a
     return agendamento;
 }
 async function deleteAgendamentoID(id) {
-    await prisma.agendamentos.deleteMany({ where: { id: id } });
+    const agendamentos = await prisma.agendamentos.delete({ where: { id: id } });
+    return agendamentos;
 }
 module.exports = {
     getAgendamentos,

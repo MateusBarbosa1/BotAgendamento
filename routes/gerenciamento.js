@@ -18,6 +18,9 @@ module.exports = function(app) {
     app.get("/gerenciar/bruno/horarios", (req,res) => {
         gerenciamentoControllers.renderGerenciamentoHorariosBruno(app,req,res);
     });
+    app.get("/gerenciar/bruno/create_agendamento", (req,res) => {
+        gerenciamentoControllers.renderCreateAgendamentoBruno(app,req,res);
+    });
     app.get("/gerenciar/wallyson/agendamentos", (req,res) => {
         gerenciamentoControllers.renderGerenciamentoAgendamentosWallyson(app,req,res);
     });
@@ -27,6 +30,10 @@ module.exports = function(app) {
     app.get("/gerenciar/wallyson/horarios", (req,res) => {
         gerenciamentoControllers.renderGerenciamentoHorariosWallyson(app,req,res);
     });
+    app.get("/gerenciar/wallyson/create_agendamento", (req,res) => {
+        gerenciamentoControllers.renderCreateAgendamentoWallyson(app,req,res);
+    });
+    
 
     app.post('/gerenciar/bruno/agendamentos', (req,res) => {
         gerenciamentoControllers.searchDateBruno(app,req,res);
@@ -75,6 +82,12 @@ module.exports = function(app) {
     });
     app.post('/horarios/wallyson/delete', (req,res) => {
         gerenciamentoControllers.deleteHorarioWallyson(app,req,res);
+    });
+    app.post("/gerenciar/bruno/create_agendamento", (req,res) => {
+        gerenciamentoControllers.createAgendamentoBruno(app,req,res);
+    });
+    app.post("/gerenciar/wallyson/create_agendamento", (req,res) => {
+        gerenciamentoControllers.createAgendamentoWallyson(app,req,res);
     });
     
 }
