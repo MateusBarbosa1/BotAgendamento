@@ -63,6 +63,7 @@
                     <h2>${agendamento.time}</h2>
                     <p style="font-weight: bold;">${agendamento.servico}</p>
                     <p>${agendamento.name}</p>
+                    <p>${agendamento.numero}</p>
                     <form action="/delete/id" method="post">
                         <input type="hidden" name="link" value="${window.location.pathname}">
                         <input type="hidden" name="id" value="${agendamento.id}">
