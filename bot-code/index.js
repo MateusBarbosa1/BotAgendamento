@@ -56,7 +56,6 @@ module.exports = function(Client, LocalAuth, qrcode) {
     
     // Responder mensagens
     client.on('message', async (message) => {
-
         // Verifica se o usuário está iniciando a conversa com "oi"
         if (message.body) {
             usuarioAtual = message.from;

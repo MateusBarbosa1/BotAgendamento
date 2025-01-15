@@ -1,3 +1,2 @@
-2025/01/15-23:36:46.815 fc0 Reusing MANIFEST /workspaces/BotAgendamento/.wwebjs_auth/session/Default/Session Storage/MANIFEST-000001
-2025/01/15-23:36:46.816 fc0 Recovering log #3
-2025/01/15-23:36:46.816 fc0 Reusing old log /workspaces/BotAgendamento/.wwebjs_auth/session/Default/Session Storage/000003.log 
+2025/01/15-23:56:33.256 3205 Creating DB /workspaces/BotAgendamento/.wwebjs_auth/session/Default/Session Storage since it was missing.
+2025/01/15-23:56:33.276 3205 Reusing MANIFEST /workspaces/BotAgendamento/.wwebjs_auth/session/Default/Session Storage/MANIFEST-000001
