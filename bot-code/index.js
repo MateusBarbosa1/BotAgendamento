@@ -29,7 +29,17 @@ module.exports = function(Client, LocalAuth, qrcode) {
         const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
         return uuidRegex.test(message);
     }
-    
+    const usersLastMessage = {}; // Estrutura para armazenar interações (em memória)
+
+// Função auxiliar para verificar se é a primeira interação do dia
+    function isFirstMessageToday(userId) {
+        const today = new Date().toISOString().split('T')[0]; // Data atual no formato YYYY-MM-DD
+        if (usersLastMessage[userId] === today) {
+            return false; // Já respondeu hoje
+        }
+        usersLastMessage[userId] = today; // Atualiza para a data atual
+        return true; // É a primeira mensagem do dia
+    }
     // Gerar QR Code para login
     client.on('qr', (qr) => {
         console.log('Escaneie este QR Code com seu WhatsApp:');
@@ -48,12 +58,21 @@ module.exports = function(Client, LocalAuth, qrcode) {
     client.on('message', async (message) => {
 
         // Verifica se o usuário está iniciando a conversa com "oi"
-        if (message.body.toLowerCase() === 'oi' || message.body == "0") {
+        if (message.body) {
             usuarioAtual = message.from;
-            todas_informacoes = []
-            state = ""
-            message.reply(`👋 Olá! Seja Bem Vindo!\nVamos agendar seu atendimento? ✂️💇‍♂️\n\n🗓️ Escolha uma das opções abaixo para começar:\n\n📅 Agendar um corte - 1\n🔄 Cancelar um agendamento - 2\n💬 Falar com um atendente - 3`);
-            return;
+            if (isFirstMessageToday(usuarioAtual)) {
+                // Envia a resposta apenas na primeira mensagem do dia
+                todas_informacoes = []
+                state = ""
+                message.reply(`👋 Olá! Seja Bem Vindo!\nVamos agendar seu serviço? ✂️💇‍♂️\n\n🗓️ Escolha uma das opções abaixo para começar:\n\n📅 Agendar um serviço - 1\n🔄 Cancelar um agendamento - 2\n💬 Falar com um atendente - 3`);
+                return;
+            }
+            if(message.body == '0' || message.body == '/bot') {
+                todas_informacoes = []
+                state = ""
+                message.reply(`👋 Olá! Seja Bem Vindo!\nVamos agendar seu serviço? ✂️💇‍♂️\n\n🗓️ Escolha uma das opções abaixo para começar:\n\n📅 Agendar um serviço - 1\n🔄 Cancelar um agendamento - 2\n💬 Falar com um atendente - 3`);
+                return;
+            }
         }
 
         // Verifica se o usuário está escolhendo a opção de agendar um corte
@@ -165,7 +184,7 @@ module.exports = function(Client, LocalAuth, qrcode) {
                         horariosDisponiveis += `🕗 ${horario}\n`;
                     });
                 
-                    message.reply(horariosDisponiveis + "\n\nDigite o seu horario exatamento igual!\n\nDigite 0 para voltar ao inicio!");
+                    message.reply(horariosDisponiveis + "\n\nDigite o seu horario exatamente igual!\n\nDigite 0 para voltar ao inicio!");
                     state = "horas";
                     return;
                 } else if(dataRecebida.getDay() == 2) { // Bruno segunda a quinta
@@ -190,7 +209,7 @@ module.exports = function(Client, LocalAuth, qrcode) {
                         horariosDisponiveis += `🕗 ${horario}\n`;
                     });
                 
-                    message.reply(horariosDisponiveis + "\n\nDigite o seu horario exatamento igual!\n\nDigite 0 para voltar ao inicio!");
+                    message.reply(horariosDisponiveis + "\n\nDigite o seu horario exatamente igual!\n\nDigite 0 para voltar ao inicio!");
                     state = "horas";
                     return;
                 } else if(dataRecebida.getDay() == 3) { // Bruno segunda a quinta
@@ -215,7 +234,7 @@ module.exports = function(Client, LocalAuth, qrcode) {
                         horariosDisponiveis += `🕗 ${horario}\n`;
                     });
                 
-                    message.reply(horariosDisponiveis + "\n\nDigite o seu horario exatamento igual!\n\nDigite 0 para voltar ao inicio!");
+                    message.reply(horariosDisponiveis + "\n\nDigite o seu horario exatamente igual!\n\nDigite 0 para voltar ao inicio!");
                     state = "horas";
                     return;
                 } else if(dataRecebida.getDay() == 4) { // Bruno segunda a quinta
@@ -240,7 +259,7 @@ module.exports = function(Client, LocalAuth, qrcode) {
                         horariosDisponiveis += `🕗 ${horario}\n`;
                     });
                 
-                    message.reply(horariosDisponiveis + "\n\nDigite o seu horario exatamento igual!\n\nDigite 0 para voltar ao inicio!");
+                    message.reply(horariosDisponiveis + "\n\nDigite o seu horario exatamente igual!\n\nDigite 0 para voltar ao inicio!");
                     state = "horas";
                     return;
                 } else if(dataRecebida.getDay() == 5) { // Bruno sexta
@@ -265,7 +284,7 @@ module.exports = function(Client, LocalAuth, qrcode) {
                         horariosDisponiveis += `🕗 ${horario}\n`;
                     });
                 
-                    message.reply(horariosDisponiveis + "\n\nDigite o seu horario exatamento igual!\n\nDigite 0 para voltar ao inicio!");
+                    message.reply(horariosDisponiveis + "\n\nDigite o seu horario exatamente igual!\n\nDigite 0 para voltar ao inicio!");
                     state = "horas";
                     return;
                 } else if(dataRecebida.getDay() == 6) { // Bruno sabado
@@ -290,7 +309,7 @@ module.exports = function(Client, LocalAuth, qrcode) {
                         horariosDisponiveis += `🕗 ${horario}\n`;
                     });
                 
-                    message.reply(horariosDisponiveis + "\n\nDigite o seu horario exatamento igual!\n\nDigite 0 para voltar ao inicio!");
+                    message.reply(horariosDisponiveis + "\n\nDigite o seu horario exatamente igual!\n\nDigite 0 para voltar ao inicio!");
                     state = "horas";
                     return;
                 }
@@ -317,7 +336,7 @@ module.exports = function(Client, LocalAuth, qrcode) {
                         horariosDisponiveis += `🕗 ${horario}\n`;
                     });
                 
-                    message.reply(horariosDisponiveis + "\n\nDigite o seu horario exatamento igual!\n\nDigite 0 para voltar ao inicio!");
+                    message.reply(horariosDisponiveis + "\n\nDigite o seu horario exatamente igual!\n\nDigite 0 para voltar ao inicio!");
                     state = "horas";
                     return;
                 } else if(dataRecebida.getDay() == 2) { // Wallyson terça a quinta
@@ -342,7 +361,7 @@ module.exports = function(Client, LocalAuth, qrcode) {
                         horariosDisponiveis += `🕗 ${horario}\n`;
                     });
                 
-                    message.reply(horariosDisponiveis + "\n\nDigite o seu horario exatamento igual!\n\nDigite 0 para voltar ao inicio!");
+                    message.reply(horariosDisponiveis + "\n\nDigite o seu horario exatamente igual!\n\nDigite 0 para voltar ao inicio!");
                     state = "horas";
                     return;
                 } else if(dataRecebida.getDay() == 3) { // Wallyson terça a quinta
@@ -367,7 +386,7 @@ module.exports = function(Client, LocalAuth, qrcode) {
                         horariosDisponiveis += `🕗 ${horario}\n`;
                     });
                 
-                    message.reply(horariosDisponiveis + "\n\nDigite o seu horario exatamento igual!\n\nDigite 0 para voltar ao inicio!");
+                    message.reply(horariosDisponiveis + "\n\nDigite o seu horario exatamente igual!\n\nDigite 0 para voltar ao inicio!");
                     state = "horas";
                     return;
                 } else if(dataRecebida.getDay() == 4) { // Wallyson terça a quinta
@@ -392,7 +411,7 @@ module.exports = function(Client, LocalAuth, qrcode) {
                         horariosDisponiveis += `🕗 ${horario}\n`;
                     });
                 
-                    message.reply(horariosDisponiveis + "\n\nDigite o seu horario exatamento igual!\n\nDigite 0 para voltar ao inicio!");
+                    message.reply(horariosDisponiveis + "\n\nDigite o seu horario exatamente igual!\n\nDigite 0 para voltar ao inicio!");
                     state = "horas";
                     return;
                 } else if(dataRecebida.getDay() == 5) { // Wallyson sexta
@@ -417,7 +436,7 @@ module.exports = function(Client, LocalAuth, qrcode) {
                         horariosDisponiveis += `🕗 ${horario}\n`;
                     });
                 
-                    message.reply(horariosDisponiveis + "\n\nDigite o seu horario exatamento igual!\n\nDigite 0 para voltar ao inicio!");
+                    message.reply(horariosDisponiveis + "\n\nDigite o seu horario exatamente igual!\n\nDigite 0 para voltar ao inicio!");
                     state = "horas";
                     return;
                 } else if(dataRecebida.getDay() == 6) { // Wallyson sabado
@@ -442,7 +461,7 @@ module.exports = function(Client, LocalAuth, qrcode) {
                         horariosDisponiveis += `🕗 ${horario}\n`;
                     });
                 
-                    message.reply(horariosDisponiveis + "\n\nDigite o seu horario exatamento igual!\n\nDigite 0 para voltar ao inicio!");
+                    message.reply(horariosDisponiveis + "\n\nDigite o seu horario exatamente igual!\n\nDigite 0 para voltar ao inicio!");
                     state = "horas";
                     return;
                 }
