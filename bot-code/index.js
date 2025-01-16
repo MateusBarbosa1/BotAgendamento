@@ -53,10 +53,25 @@ module.exports = function(Client, LocalAuth, qrcode) {
             client.sendMessage(number,message);
         }
     });
+
+    client.on('disconnected', (reason) => {
+        console.log('Bot desconectado:', reason);
+        client.initialize(); // Tentar reconectar
+    });
     
     // Responder mensagens
     client.on('message', async (message) => {
         // Verifica se o usuário está iniciando a conversa com "oi"
+            if (message.quotedMessage) {
+                try {
+                    const quotedMessage = message.quotedMessage;
+                    console.log('Mensagem citada:', quotedMessage.body);
+                } catch (error) {
+                    console.error('Erro ao acessar a mensagem citada:', error);
+                }
+            } else {
+                console.log('Nenhuma mensagem citada.');
+            }
         if (message.body) {
             usuarioAtual = message.from;
             if (isFirstMessageToday(usuarioAtual)) {
