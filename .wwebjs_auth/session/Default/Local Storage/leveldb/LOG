@@ -1,2 +1,3 @@
-2025/01/16-00:26:23.772 6d0e Creating DB /workspaces/BotAgendamento/.wwebjs_auth/session/Default/Local Storage/leveldb since it was missing.
-2025/01/16-00:26:23.778 6d0e Reusing MANIFEST /workspaces/BotAgendamento/.wwebjs_auth/session/Default/Local Storage/leveldb/MANIFEST-000001
+2025/01/16-00:30:40.016 76ed Reusing MANIFEST /workspaces/BotAgendamento/.wwebjs_auth/session/Default/Local Storage/leveldb/MANIFEST-000001
+2025/01/16-00:30:40.017 76ed Recovering log #3
+2025/01/16-00:30:40.017 76ed Reusing old log /workspaces/BotAgendamento/.wwebjs_auth/session/Default/Local Storage/leveldb/000003.log 
