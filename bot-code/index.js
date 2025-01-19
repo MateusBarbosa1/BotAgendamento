@@ -108,7 +108,7 @@ module.exports = function(Client, LocalAuth, qrcode) {
 
             }
 
-            message.reply("Selecione qual serviço você deseja!\n\n1 - Cabelo\n2 - Barba\n3 - Cabelo/Barba\n\nTABELA DE PREÇOS\n\nCorte - R$ 25\nBarba - R$ 20\nSobrancelha - R$ 10\nAcabamento (Pezinho) - R$ 10\nCabelo+Sobrancelha - R$ 30\nCabelo+Barba - R$ 40\n\nDigite 0 para voltar ao inicio!")
+            message.reply("Selecione qual serviço você deseja!\n\n1 - Cabelo\n2 - Barba\n3 - Sobrancelha\n4 - Acabamento (Pezinho)\n5 - Cabelo+Sobrancelha\n6 - Cabelo+Barba\n\nTABELA DE PREÇOS\n\nCabelo - R$ 25\nBarba - R$ 20\nSobrancelha - R$ 10\nAcabamento (Pezinho) - R$ 10\nCabelo+Sobrancelha - R$ 30\nCabelo+Barba - R$ 40\n\nDigite 0 para voltar ao inicio!")
             state = "servico"
             return
         }
@@ -139,8 +139,26 @@ module.exports = function(Client, LocalAuth, qrcode) {
             state = "barber"
             return
         }
+        if(state == "servico" && message.body === '6') {
+            todas_informacoes.push("Cabelo+Barba");
+            message.reply("Agora selecione um dos nossos barbeiro!\n\nB - Bruno\nW - Wallyson\n\nDigite 0 para voltar ao inicio!")
+            state = "barber"
+            return
+        }
+        if(state == "servico" && message.body === '5') {
+            todas_informacoes.push("Cabelo+Sobrancelha");
+            message.reply("Agora selecione um dos nossos barbeiro!\n\nB - Bruno\nW - Wallyson\n\nDigite 0 para voltar ao inicio!")
+            state = "barber"
+            return
+        }
         if(state == "servico" && message.body === '3') {
-            todas_informacoes.push("Cabelo/Barba");
+            todas_informacoes.push("Sobrancelha");
+            message.reply("Agora selecione um dos nossos barbeiro!\n\nB - Bruno\nW - Wallyson\n\nDigite 0 para voltar ao inicio!")
+            state = "barber"
+            return
+        }
+        if(state == "servico" && message.body === '4') {
+            todas_informacoes.push("Acabamento (Pezinho)");
             message.reply("Agora selecione um dos nossos barbeiro!\n\nB - Bruno\nW - Wallyson\n\nDigite 0 para voltar ao inicio!")
             state = "barber"
             return
