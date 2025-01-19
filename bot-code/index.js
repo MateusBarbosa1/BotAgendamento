@@ -65,12 +65,9 @@ module.exports = function(Client, LocalAuth, qrcode) {
             if (message.quotedMessage) {
                 try {
                     const quotedMessage = message.quotedMessage;
-                    console.log('Mensagem citada:', quotedMessage.body);
                 } catch (error) {
                     console.error('Erro ao acessar a mensagem citada:', error);
                 }
-            } else {
-                console.log('Nenhuma mensagem citada.');
             }
         if (message.body) {
             usuarioAtual = message.from;
