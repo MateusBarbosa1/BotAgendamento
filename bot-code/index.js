@@ -108,7 +108,7 @@ module.exports = function(Client, LocalAuth, qrcode) {
 
             }
 
-            message.reply("Selecione qual serviço você deseja!\n\n1 - Cabelo\n2 - Barba\n3 - Cabelo/Barba\n\nDigite 0 para voltar ao inicio!")
+            message.reply("Selecione qual serviço você deseja!\n\n1 - Cabelo\n2 - Barba\n3 - Cabelo/Barba\n\nTABELA DE PREÇOS\n\nCorte - R$ 25\nBarba - R$ 20\nSobrancelha - R$ 10\nAcabamento (Pezinho) - R$ 10\nCabelo+Sobrancelha - R$ 30\nCabelo+Barba - R$ 40\n\nDigite 0 para voltar ao inicio!")
             state = "servico"
             return
         }
