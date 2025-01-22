@@ -47,7 +47,10 @@
           <option>Escolha o Serviço</option>
           <option value="Cabelo">Cabelo</option>
           <option value="Barba">Barba</option>
-          <option value="Cabelo/Barba">Cabelo/Barba</option>
+          <option value="Sobrancelha">Sobrancelha</option>
+          <option value="Acabamento (Pezinho)">Acabamento (Pezinho)</option>
+          <option value="Cabelo+Sobrancelha">Cabelo+Sobrancelha</option>
+          <option value="Cabelo+Barba">Cabelo+Barba</option>
         </select>
         <select name="barbeiro" id="">
           <option>Escolha seu Barbeiro</option>
@@ -61,19 +64,52 @@
         <form action="" method="post" class="register">
           <select name="servico" id="">
             <% if(init_query.servico == "Cabelo") { %>
-            <option value="Cabelo" selected>Cabelo</option>
-            <option value="Barba">Barba</option>
-            <option value="Cabelo/Barba">Cabelo/Barba</option>
+              <option value="Cabelo" selected>Cabelo</option>
+              <option value="Barba">Barba</option>
+              <option value="Sobrancelha">Sobrancelha</option>
+              <option value="Acabamento (Pezinho)">Acabamento (Pezinho)</option>
+              <option value="Cabelo+Sobrancelha">Cabelo+Sobrancelha</option>
+              <option value="Cabelo+Barba">Cabelo+Barba</option>
             <% } %>
             <% if(init_query.servico == "Barba") { %>
               <option value="Cabelo">Cabelo</option>
               <option value="Barba" selected>Barba</option>
-              <option value="Cabelo/Barba">Cabelo/Barba</option>
+              <option value="Sobrancelha">Sobrancelha</option>
+              <option value="Acabamento (Pezinho)">Acabamento (Pezinho)</option>
+              <option value="Cabelo+Sobrancelha">Cabelo+Sobrancelha</option>
+              <option value="Cabelo+Barba">Cabelo+Barba</option>
             <% } %>
-            <% if(init_query.servico == "Cabelo/Barba") { %>
+            <% if(init_query.servico == "Sobrancelha") { %>
               <option value="Cabelo">Cabelo</option>
               <option value="Barba">Barba</option>
-              <option value="Cabelo/Barba" selected>Cabelo/Barba</option>
+              <option value="Sobrancelha" selected>Sobrancelha</option>
+              <option value="Acabamento (Pezinho)">Acabamento (Pezinho)</option>
+              <option value="Cabelo+Sobrancelha">Cabelo+Sobrancelha</option>
+              <option value="Cabelo+Barba">Cabelo+Barba</option>
+            <% } %>
+            <% if(init_query.servico == "Acabamento (Pezinho)") { %>
+              <option value="Cabelo">Cabelo</option>
+              <option value="Barba">Barba</option>
+              <option value="Sobrancelha">Sobrancelha</option>
+              <option value="Acabamento (Pezinho)" selected>Acabamento (Pezinho)</option>
+              <option value="Cabelo+Sobrancelha">Cabelo+Sobrancelha</option>
+              <option value="Cabelo+Barba">Cabelo+Barba</option>
+            <% } %>
+            <% if(init_query.servico == "Cabelo+Sobrancelha") { %>
+              <option value="Cabelo">Cabelo</option>
+              <option value="Barba">Barba</option>
+              <option value="Sobrancelha">Sobrancelha</option>
+              <option value="Acabamento (Pezinho)">Acabamento (Pezinho)</option>
+              <option value="Cabelo+Sobrancelha" selected>Cabelo+Sobrancelha</option>
+              <option value="Cabelo+Barba">Cabelo+Barba</option>
+            <% } %>
+            <% if(init_query.servico == "Cabelo+Barba") { %>
+              <option value="Cabelo">Cabelo</option>
+              <option value="Barba">Barba</option>
+              <option value="Sobrancelha">Sobrancelha</option>
+              <option value="Acabamento (Pezinho)">Acabamento (Pezinho)</option>
+              <option value="Cabelo+Sobrancelha">Cabelo+Sobrancelha</option>
+              <option value="Cabelo+Barba" selected>Cabelo+Barba</option>
             <% } %>
           </select>
           <select name="barbeiro" id="">

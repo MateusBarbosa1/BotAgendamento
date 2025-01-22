@@ -3,8 +3,13 @@ const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
 
 async function getAgendamentos(date, barber) {
-    const agendamento = await prisma.agendamentos.findMany({ where: { barbeiro: barber, date: new Date(date) } });
-    return agendamento;
+    try {
+        const agendamento = await prisma.agendamentos.findMany({ where: { barbeiro: barber, date: new Date(date) } });
+        return agendamento;
+    } catch(err) {
+        console.error('Houve algum erro: '+ err);
+    }
+    
 }
 async function getAgendamentosNumber(number) {
     const agendamentos = await prisma.agendamentos.findMany({ where: { numero: number } });

@@ -113,13 +113,15 @@ module.exports.deleteAgendamento = async function(app,req,res,barber) {
     const data = req.body;
 
     const agendamentosModel = require('../models/agendamentosModel');
-    const { send } = require('../bot-code/index');
+    const { send } = require('../server');
 
     if(Array.isArray(data.selectedAgendamentos)) {
         for(let i = 0;i < data.selectedAgendamentos.length;i++) {
             const agendamento = await agendamentosModel.deleteAgendamentoID(data.selectedAgendamentos[i]);
             const date = new Date(agendamento.date);
             if(agendamento.numero != "local") {
+            console.log('teste');
+
                 send(agendamento.numero, `🚨 SEU AGENDAMENTO FOI CANCELADO!\n\n👨 ${agendamento.name}\n📅 ${date.getDate()}/${date.getMonth()+1}/${date.getFullYear()}\n🕗 ${agendamento.time}`);
             }
         }
@@ -127,6 +129,8 @@ module.exports.deleteAgendamento = async function(app,req,res,barber) {
         const agendamento = await agendamentosModel.deleteAgendamentoID(data.selectedAgendamentos); 
         const date = new Date(agendamento.date);
         if(agendamento.numero != "local") {
+            console.log('teste');
+
             send(agendamento.numero, `🚨 SEU AGENDAMENTO FOI CANCELADO!\n\n👨 ${agendamento.name}\n📅 ${date.getDate()}/${date.getMonth()+1}/${date.getFullYear()}\n🕗 ${agendamento.time}`)
         }
     }
@@ -201,7 +205,7 @@ module.exports.renderCreateAgendamentoBruno = async function(app,req,res) {
         const agendamentosModel = require('../models/agendamentosModel');
         const dias = ["Segunda","Terca","Quarta","Quinta","Sexta","Sabado"];
         const horariosModel = require("../models/horariosModel");
-        const horarios = await horariosModel.getHorariosBruno(dias[new Date(init_query.date).getDay()]);
+        const horarios = await horariosModel.getHorariosBruno(dias[new Date(init_query.date).getDay()-1]);
         const agendamentos = await agendamentosModel.getAgendamentos(new Date(init_query.date), init_query.barbeiro);
         let horariosIndisponiveis = [];
         let horariosDisponiveis = [];
@@ -228,7 +232,7 @@ module.exports.renderCreateAgendamentoWallyson = async function(app,req,res) {
         const agendamentosModel = require('../models/agendamentosModel');
         const dias = ["Segunda","Terca","Quarta","Quinta","Sexta","Sabado"];
         const horariosModel = require("../models/horariosModel");
-        const horarios = await horariosModel.getHorariosWallyson(dias[new Date(init_query.date).getDay()]);
+        const horarios = await horariosModel.getHorariosWallyson(dias[new Date(init_query.date).getDay()-1]);
         const agendamentos = await agendamentosModel.getAgendamentos(new Date(init_query.date), init_query.barbeiro);
         let horariosIndisponiveis = [];
         let horariosDisponiveis = [];
