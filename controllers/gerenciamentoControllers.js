@@ -222,6 +222,7 @@ module.exports.createAgendamentoBruno = async function(app,req,res) {
 }
 module.exports.renderCreateAgendamentoWallyson = async function(app,req,res) {
     const init_query = req.query;
+    console.log(init_query)
     if(Object.values(init_query).length === 0) {
         res.render('gerenciamento/createAgendamentoWallyson', {init_query: false, horarios: false});        
     } else {
@@ -229,6 +230,7 @@ module.exports.renderCreateAgendamentoWallyson = async function(app,req,res) {
         const dias = ["Segunda","Terca","Quarta","Quinta","Sexta","Sabado"];
         const horariosModel = require("../models/horariosModel");
         const horarios = await horariosModel.getHorariosWallyson(dias[new Date(init_query.date).getDay()-1]);
+        console.log('aqui')
         const agendamentos = await agendamentosModel.getAgendamentos(new Date(init_query.date), init_query.barbeiro);
         let horariosIndisponiveis = [];
         let horariosDisponiveis = [];
@@ -236,7 +238,9 @@ module.exports.renderCreateAgendamentoWallyson = async function(app,req,res) {
             horariosIndisponiveis.push(agendamentos[i].time);
         }
 
+        console.log(horarios);
         horariosDisponiveis = horarios[0].horarios.filter(horario => !horariosIndisponiveis.includes(horario));
+        console.log(horariosDisponiveis);
         res.render('gerenciamento/createAgendamentoWallyson', {init_query: init_query, horarios: horariosDisponiveis})
     }
 }
