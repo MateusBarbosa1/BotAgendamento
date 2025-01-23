@@ -110,29 +110,25 @@ module.exports.deletarDataHoraWallyson = async function(app,req,res) {
     res.redirect('/gerenciar/wallyson/data_hora')
 }
 module.exports.deleteAgendamento = async function(app,req,res,barber) {
+    const axios = require('axios');
     const data = req.body;
 
     const agendamentosModel = require('../models/agendamentosModel');
-    const { send } = require('../server');
 
     if(Array.isArray(data.selectedAgendamentos)) {
         for(let i = 0;i < data.selectedAgendamentos.length;i++) {
             const agendamento = await agendamentosModel.deleteAgendamentoID(data.selectedAgendamentos[i]);
             const date = new Date(agendamento.date);
             if(agendamento.numero != "local") {
-            console.log('teste');
-
-                send(agendamento.numero, `🚨 SEU AGENDAMENTO FOI CANCELADO!\n\n👨 ${agendamento.name}\n📅 ${date.getDate()}/${date.getMonth()+1}/${date.getFullYear()}\n🕗 ${agendamento.time}`);
+                // MENSAGEM DELETE
             }
         }
     } else {
         const agendamento = await agendamentosModel.deleteAgendamentoID(data.selectedAgendamentos); 
         const date = new Date(agendamento.date);
         if(agendamento.numero != "local") {
-            console.log('teste');
-
-            send(agendamento.numero, `🚨 SEU AGENDAMENTO FOI CANCELADO!\n\n👨 ${agendamento.name}\n📅 ${date.getDate()}/${date.getMonth()+1}/${date.getFullYear()}\n🕗 ${agendamento.time}`)
-        }
+                // MENSAGEM DELETE
+            }
     }
     
     if(barber == "b") {
