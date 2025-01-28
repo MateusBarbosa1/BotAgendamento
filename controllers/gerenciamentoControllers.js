@@ -93,19 +93,28 @@ module.exports.gerenciarDataHoraWallyson = async function(app,req,res) {
 }
 module.exports.deletarDataHoraBruno = async function(app,req,res) {
     const data = req.body;
-
     const agendamentosModel = require('../models/agendamentosModel');
-    for(let i = 0;i < data.selectedHorarios.length;i++) {
-        await agendamentosModel.setAgendamentos("","Bruno",new Date(data.date).toISOString(),data.selectedHorarios[i],"Indisponivel","Indisponivel",new Date());
+
+    if(Array.isArray(data.selectedHorarios)) {
+        for(let i = 0;i < data.selectedHorarios.length;i++) {
+            await agendamentosModel.setAgendamentos("","Bruno",new Date(data.date).toISOString(),data.selectedHorarios[i],"Indisponivel","Indisponivel",new Date());
+        }
+    } else {
+        await agendamentosModel.setAgendamentos("","Bruno",new Date(data.date).toISOString(),data.selectedHorarios,"Indisponivel","Indisponivel",new Date());
     }
-    res.redirect('/gerenciar/bruno/data_hora')
+    res.redirect('/gerenciar/bruno/data_hora');
+    
 }
 module.exports.deletarDataHoraWallyson = async function(app,req,res) {
     const data = req.body;
-
     const agendamentosModel = require('../models/agendamentosModel');
-    for(let i = 0;i < data.selectedHorarios.length;i++) {
-        await agendamentosModel.setAgendamentos("","Wallyson",new Date(data.date).toISOString(),data.selectedHorarios[i],"Indisponivel","Indisponivel",new Date());
+    
+    if(Array.isArray(data.selectedHorarios)) {
+        for(let i = 0;i < data.selectedHorarios.length;i++) {
+            await agendamentosModel.setAgendamentos("","Wallyson",new Date(data.date).toISOString(),data.selectedHorarios[i],"Indisponivel","Indisponivel",new Date());
+        }
+    } else {
+        await agendamentosModel.setAgendamentos("","Wallyson",new Date(data.date).toISOString(),data.selectedHorarios,"Indisponivel","Indisponivel",new Date());
     }
     res.redirect('/gerenciar/wallyson/data_hora')
 }
