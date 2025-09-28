@@ -256,14 +256,14 @@ module.exports.deleteAgendamento = async function(app,req,res,barber) {
             const agendamento = await agendamentosModel.deleteAgendamentoID(data.selectedAgendamentos[i]);
             const date = new Date(agendamento.date);
             if(agendamento.numero != "local") {
-                await sendMessage(agendamento.numero, "⚠️ Seu agendamento foi cancelado pelo Barbeiro!")
+                await sendMessage(agendamento.numero, "Seu agendamento foi cancelado com sucesso!✅")
             }
         }
     } else {
         const agendamento = await agendamentosModel.deleteAgendamentoID(data.selectedAgendamentos); 
         const date = new Date(agendamento.date);
         if(agendamento.numero != "local") {
-            await sendMessage(agendamento.numero, "⚠️ Seu agendamento foi cancelado pelo Barbeiro!")
+            await sendMessage(agendamento.numero, "Seu agendamento foi cancelado com sucesso!✅")
         }
     }
     
