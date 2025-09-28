@@ -1,3 +1,131 @@
+const makeWASocket = require('@whiskeysockets/baileys').default;
+const { useMultiFileAuthState, fetchLatestBaileysVersion } = require('@whiskeysockets/baileys');
+const qrcode = require('qrcode-terminal');
+const path = require('path');
+
+const authDirectory = path.join(__dirname, 'wwebjs_auth');
+
+let sock = null;
+
+// fila para mensagens que chegam antes do socket estar pronto
+const pendingMessages = [];
+
+// flag / promise para saber quando está conectado
+let isConnected = false;
+let resolveConnected;
+const connectedPromise = new Promise(resolve => { resolveConnected = resolve; });
+
+async function startBot() {
+    // pega a versão (compatibilidade de protocolo)
+    const versionInfo = await fetchLatestBaileysVersion();
+    // suporta retorno em array ou objeto (fallback seguro)
+    const version = Array.isArray(versionInfo) ? versionInfo[0] : (versionInfo?.version ?? undefined);
+
+    const { state, saveCreds } = await useMultiFileAuthState(authDirectory);
+
+    sock = makeWASocket({
+        version, // importantíssimo para compatibilidade
+        auth: state,
+        browser: ['Ubuntu', 'Chrome', '22.04'],
+        printQRInTerminal: true,
+        markOnlineOnConnect: false
+    });
+
+    sock.ev.on('connection.update', async (update) => {
+        console.log('connection.update:', update); // DEBUG: imprime tudo pra inspeção
+        const { connection, qr, lastDisconnect } = update;
+
+        if (qr) {
+            console.log('BARBOSA DEV - Escaneie o QR:');
+            qrcode.generate(qr, { small: true });
+        }
+
+        if (connection === 'open') {
+            isConnected = true;
+            console.log('Conectado com sucesso! sock.user:', sock.user ?? '<sem sock.user>');
+            resolveConnected(true);
+
+            // flush fila
+            while (pendingMessages.length > 0) {
+                const item = pendingMessages.shift();
+                try {
+                    console.log('Flushing queued message para', item.jid);
+                    const result = await sock.sendMessage(item.jid, { text: item.message });
+                    console.log('Queued message enviada:', item.jid, result);
+                    item.resolve(result);
+                } catch (err) {
+                    console.error('Erro ao enviar queued message para', item.jid, err);
+                    item.reject(err);
+                }
+            }
+        }
+
+        if (connection === 'close') {
+            isConnected = false;
+            console.log('Conexão fechada:', lastDisconnect?.error ?? lastDisconnect);
+            const shouldReconnect = (lastDisconnect?.error)?.output?.statusCode !== 401;
+            if (shouldReconnect) {
+                console.log('Tentando reconectar...');
+                startBot();
+            } else {
+                console.log('Não reconectar (401).');
+            }
+        }
+    });
+
+    sock.ev.on('creds.update', saveCreds);
+}
+
+function normalizeToJid(number) {
+    if (!number) return null;
+    if (typeof number !== 'string' && typeof number !== 'number') return null;
+
+    let s = String(number).trim();
+
+    // se já tem @, assume que é jid
+    if (s.includes('@')) return s;
+
+    // retira tudo que não é dígito
+    const digits = s.replace(/\D/g, '');
+    if (!digits) return null;
+
+    // se não tem código do país, tenta colocar 55 (BR) como fallback
+    // ajuste esse comportamento se seus números do BD já contêm country code
+    const withCountry = digits.length <= 11 ? '55' + digits : digits;
+
+    return `${withCountry}@s.whatsapp.net`;
+}
+
+async function sendMessage(number, message) {
+    try {
+        const jid = normalizeToJid(number);
+        if (!jid) {
+            console.error('sendMessage: número inválido, pulando envio:', number);
+            return null;
+        }
+
+        // se não estiver conectado, enfileira e retorna uma Promise que será resolvida ao enviar
+        if (!isConnected || !sock) {
+            console.log('sendMessage: socket não pronto, enfileirando para', jid);
+            return new Promise((resolve, reject) => {
+                pendingMessages.push({ jid, message, resolve, reject });
+            });
+        }
+
+        // caso esteja conectado:
+        const result = await sock.sendMessage(jid, { text: message });
+        console.log('sendMessage: enviado', jid, result);
+        return result;
+    } catch (error) {
+        // imprime o objeto inteiro pra ver stack/detalhes
+        console.error('sendMessage: erro completo:', error);
+        throw error; // re-lança pra o chamador poder tratar
+    }
+}
+
+// inicia
+startBot();
+
 module.exports.renderGerenciamento =function(app,req,res) {
     const { jwtDecode } = require("jwt-decode");
 
@@ -40,8 +168,7 @@ module.exports.renderGerenciamentoBruno = function(app,req,res) {
         }
     }
 }
-module.exports.renderGerenciamentoAgendamentosBruno = function(app,req,res) {
-    
+module.exports.renderGerenciamentoAgendamentosBruno = async function(app,req,res) {
     res.render('gerenciamento/agendamentosBruno', {agendamentos: '', date: ''});
 }
 module.exports.renderGerenciamentoDataHoraBruno = function(app,req,res) {
@@ -129,15 +256,15 @@ module.exports.deleteAgendamento = async function(app,req,res,barber) {
             const agendamento = await agendamentosModel.deleteAgendamentoID(data.selectedAgendamentos[i]);
             const date = new Date(agendamento.date);
             if(agendamento.numero != "local") {
-                // MENSAGEM DELETE
+                await sendMessage(agendamento.numero, "⚠️ Seu agendamento foi cancelado pelo Barbeiro!")
             }
         }
     } else {
         const agendamento = await agendamentosModel.deleteAgendamentoID(data.selectedAgendamentos); 
         const date = new Date(agendamento.date);
         if(agendamento.numero != "local") {
-                // MENSAGEM DELETE
-            }
+            await sendMessage(agendamento.numero, "⚠️ Seu agendamento foi cancelado pelo Barbeiro!")
+        }
     }
     
     if(barber == "b") {
